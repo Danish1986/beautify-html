@@ -1,23 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  // CRITICAL FIX: Set the base path for GitHub Pages deployment.
-  // Repository name is 'beautify-html', so the base URL is /<repo-name>/
+export default defineConfig({
+  // CRITICAL FIX: Base path for GitHub Pages
   base: '/beautify-html/', 
-  // END CRITICAL FIX
-
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-}));
+  
+  plugins: [react()],
+  
+  // You might not need these paths in a simple build
+  // If the build succeeds, we can add them back one by one.
+  // resolve: {
+  //   alias: {
+  //     "@": path.resolve(__dirname, "./src"),
+  //   },
+  // },
+});
