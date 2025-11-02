@@ -5,6 +5,11 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // CRITICAL FIX: Set the base path for GitHub Pages deployment.
+  // Repository name is 'beautify-html', so the base URL is /<repo-name>/
+  base: '/beautify-html/', 
+  // END CRITICAL FIX
+
   server: {
     host: "::",
     port: 8080,
