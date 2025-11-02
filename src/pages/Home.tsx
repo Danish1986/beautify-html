@@ -140,7 +140,7 @@ export default function Home() {
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.homeHeroToTools}
           adFormat="auto"
-          style={{ display: 'block', minHeight: '250px' }}
+          style={{ display: 'block', minHeight: '90px' }}
         />
       </div>
 
@@ -203,7 +203,7 @@ export default function Home() {
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.homeFeaturesToBlog}
           adFormat="auto"
-          style={{ display: 'block', minHeight: '250px' }}
+          style={{ display: 'block', minHeight: '90px' }}
         />
       </div>
 
