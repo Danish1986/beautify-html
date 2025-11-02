@@ -1,83 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Free Online Developer Tools - JSON Formatter, Image Compressor & More | JSONPDFConverter</title>
+    <title>Free Online Developer Tools - JSON Formatter, Image Compressor & More | DevTools</title>
+    <meta name="description" content="Professional developer tools for formatting JSON, converting text to HTML, compressing images, and more. Free, fast, and privacy-focused - no registration required." />
+    <meta name="author" content="DevTools" />
+    <meta name="keywords" content="json formatter, text to html converter, image compressor, base64 encoder, pdf tools, developer tools, free online tools" />
 
-    <!-- Primary SEO -->
-    <meta name="description" content="JSONPDFConverter — fast, in-browser developer tools: JSON formatter & validator, text→HTML converter, image compressor, PDF utilities, Base64 encoder/decoder. Privacy-first, no signup." />
-    <meta name="author" content="JSONPDFConverter" />
-    <meta name="keywords" content="json formatter, text to html, image compressor, pdf tools, base64 encoder, developer tools, free online tools, json pdf converter" />
-    <meta name="theme-color" content="#FF7A59" />
-
-    <!-- Open Graph / Social -->
-    <meta property="og:title" content="JSONPDFConverter — Free Online Developer Tools" />
-    <meta property="og:description" content="Format JSON, convert text to HTML, compress images, split/merge PDFs and more — all in your browser. No signup, privacy-first." />
+    <meta property="og:title" content="Free Online Developer Tools - DevTools" />
+    <meta property="og:description" content="Format JSON, convert text to HTML, compress images, and more with our free developer tools." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://jsonpdfconverter.com/og-image.png" />
-    <meta property="og:url" content="https://jsonpdfconverter.com/" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="JSONPDFConverter — Free Developer Tools" />
-    <meta name="twitter:description" content="Browser-first tools for developers: JSON formatting, image compression, text→HTML, PDF utilities and more." />
-    <meta name="twitter:image" content="https://jsonpdfconverter.com/og-image.png" />
-
-    <!-- AdSense Meta Tags -->
-    <meta name="google-adsense-account" content="ca-pub-5299949948790866">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5299949948790866" crossorigin="anonymous"></script>
-
-    <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico">
-
-    <!-- Minimal page styling for better first-paint -->
-    <style>
-      html,body {height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;background:linear-gradient(180deg,#0f1724 0%, #081223 60%); color:#e6eef6;}
-      #pre-root { display:flex; align-items:center; justify-content:center; height:100vh; }
-      .brand-placeholder { text-align:center; color: #e6eef6; }
-      .brand-placeholder h1 { margin:0; font-size:20px; color:#fff; background:linear-gradient(90deg,#FF7A59,#FFCB57); -webkit-background-clip:text; background-clip:text; color:transparent; }
-      .brand-placeholder p { margin:8px 0 0; color:#b6c3d4; font-size:14px; }
-    </style>
+    <meta name="twitter:title" content="Free Developer Tools" />
+    <meta name="twitter:description" content="Professional developer tools - JSON formatter, image compressor, and more" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
   </head>
+
   <body>
-    <!-- Pre-root placeholder (removed by React after mount) -->
-    <div id="pre-root">
-      <div class="brand-placeholder">
-        <h1>JSONPDFConverter</h1>
-        <p>Loading tools — browser-first, privacy-first</p>
-      </div>
-    </div>
-
-    <!-- React mount point -->
     <div id="root"></div>
-
-    <!-- Example global ad slot (optional) -->
-    <div style="display:none" id="ads-top-container">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-5299949948790866"
-           data-ad-slot="1234567890"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </div>
-
-    <!-- VITE + REACT ENTRY POINT -->
-    <script type="module" src="/src/main.jsx"></script>
-
-    <!-- Optional: hide pre-root after load (fallback) -->
-    <script>
-      (function() {
-        window.addEventListener('load', function(){
-          setTimeout(function(){
-            var pre = document.getElementById('pre-root');
-            if (pre) pre.style.display = 'none';
-          }, 500);
-        });
-      })();
-    </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
