@@ -10,6 +10,7 @@ const navigation = [
   { name: "Image Tools", path: "/image-tools" },
   { name: "PDF Tools", path: "/pdf-tools" },
   { name: "Base64 Tools", path: "/base64-tools" },
+  { name: "API Tester", path: "/api-tester" },
 ];
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {

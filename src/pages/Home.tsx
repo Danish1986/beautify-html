@@ -6,7 +6,8 @@ import {
   FileText, 
   Image, 
   FileType, 
-  Binary, 
+  Binary,
+  Code,
   CheckCircle,
   Zap,
   Shield,
@@ -48,6 +49,13 @@ const tools = [
     icon: Binary,
     path: "/base64-tools",
     color: "text-yellow-500"
+  },
+  {
+    title: "API Tester",
+    description: "Test and debug REST APIs with custom headers and requests",
+    icon: Code,
+    path: "/api-tester",
+    color: "text-cyan-500"
   },
 ];
 

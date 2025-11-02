@@ -10,6 +10,7 @@ import TextToHtml from "./pages/TextToHtml";
 import ImageTools from "./pages/ImageTools";
 import PdfTools from "./pages/PdfTools";
 import Base64Tools from "./pages/Base64Tools";
+import ApiTester from "./pages/ApiTester";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/image-tools" element={<ImageTools />} />
             <Route path="/pdf-tools" element={<PdfTools />} />
             <Route path="/base64-tools" element={<Base64Tools />} />
+            <Route path="/api-tester" element={<ApiTester />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
