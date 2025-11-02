@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { Upload, Download, Image as ImageIcon, Loader2 } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 export default function ImageTools() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -99,8 +101,27 @@ export default function ImageTools() {
     ? Math.round(((originalSize - compressedSize) / originalSize) * 100)
     : 0;
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Image Compressor",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    },
+    "featureList": "Compress images, Optimize images, Reduce file size, Quality control, Download compressed images"
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.imageTools.title}
+        description={TOOL_SEO.imageTools.description}
+        keywords={TOOL_SEO.imageTools.keywords}
+        path={TOOL_SEO.imageTools.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">

@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Copy, Download, FileText, Eye } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 const sampleText = `Welcome to DevTools
 

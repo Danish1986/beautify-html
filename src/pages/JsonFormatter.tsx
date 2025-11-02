@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Copy, Download, Upload, CheckCircle, AlertCircle, FileJson } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 const sampleJSON = {
   "user": {
@@ -75,8 +77,27 @@ export default function JsonFormatter() {
     toast.success("JSON file downloaded!");
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "JSON Formatter & Validator",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    },
+    "featureList": "Format JSON, Minify JSON, Validate JSON, Copy to clipboard, Download JSON"
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.jsonFormatter.title}
+        description={TOOL_SEO.jsonFormatter.description}
+        keywords={TOOL_SEO.jsonFormatter.keywords}
+        path={TOOL_SEO.jsonFormatter.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">

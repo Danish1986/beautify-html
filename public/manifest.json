@@ -1,0 +1,19 @@
+{
+  "name": "DevTools - Free Online Developer Tools",
+  "short_name": "DevTools",
+  "description": "Professional developer tools for formatting JSON, converting text to HTML, compressing images, and more",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["developer tools", "utilities", "productivity"],
+  "lang": "en-US"
+}

@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Code, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 export default function ApiTester() {
   const [url, setUrl] = useState("");
@@ -76,8 +78,27 @@ export default function ApiTester() {
     }
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "API Tester",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    },
+    "featureList": "Test REST APIs, Custom headers, Request body, Response preview, Response time measurement"
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.apiTester.title}
+        description={TOOL_SEO.apiTester.description}
+        keywords={TOOL_SEO.apiTester.keywords}
+        path={TOOL_SEO.apiTester.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">

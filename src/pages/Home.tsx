@@ -13,6 +13,8 @@ import {
   Shield,
   Globe
 } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO, SEO_CONFIG } from "@/lib/seo-config";
 
 const tools = [
   {
@@ -83,8 +85,29 @@ const features = [
 ];
 
 export default function Home() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": SEO_CONFIG.siteName,
+    "url": SEO_CONFIG.siteUrl,
+    "description": SEO_CONFIG.defaultDescription,
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <div>
+      <SEO 
+        title={TOOL_SEO.home.title}
+        description={TOOL_SEO.home.description}
+        keywords={TOOL_SEO.home.keywords}
+        path={TOOL_SEO.home.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-hero">
         <div className="container mx-auto px-4 py-20 md:py-32">

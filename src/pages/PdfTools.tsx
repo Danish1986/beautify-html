@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileType, Upload, Download, Scissors, FileStack, Minimize, Image } from "lucide-react";
 import { toast } from "sonner";
 import { PDFDocument } from "pdf-lib";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 export default function PdfTools() {
   const [mergeFiles, setMergeFiles] = useState<File[]>([]);
@@ -130,8 +132,27 @@ export default function PdfTools() {
     }
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PDF Tools",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    },
+    "featureList": "Merge PDFs, Split PDFs, Compress PDFs, PDF to Image conversion"
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.pdfTools.title}
+        description={TOOL_SEO.pdfTools.description}
+        keywords={TOOL_SEO.pdfTools.keywords}
+        path={TOOL_SEO.pdfTools.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">

@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Copy, Binary, Upload } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { TOOL_SEO } from "@/lib/seo-config";
 
 export default function Base64Tools() {
   const [encodeInput, setEncodeInput] = useState("");
@@ -37,8 +39,27 @@ export default function Base64Tools() {
     toast.success(`${type} copied to clipboard!`);
   };
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Base64 Encoder & Decoder",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    },
+    "featureList": "Encode Base64, Decode Base64, Copy to clipboard"
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.base64Tools.title}
+        description={TOOL_SEO.base64Tools.description}
+        keywords={TOOL_SEO.base64Tools.keywords}
+        path={TOOL_SEO.base64Tools.path}
+        schema={schema}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
