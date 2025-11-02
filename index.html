@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,28 +24,26 @@
     <meta name="twitter:description" content="Browser-first tools for developers: JSON formatting, image compression, text→HTML, PDF utilities and more." />
     <meta name="twitter:image" content="https://jsonpdfconverter.com/og-image.png" />
 
-    <!-- AdSense Meta Tags (added per your account) -->
+    <!-- AdSense Meta Tags -->
     <meta name="google-adsense-account" content="ca-pub-5299949948790866">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5299949948790866" crossorigin="anonymous"></script>
 
-    <!-- Minimal page styling for better first-paint (keeps design vibrant) -->
-    <link rel="icon" href="/favicon.ico">
+    <!-- Favicon -->
+    <link rel="icon" href="/beautify-html/favicon.ico">
+
+    <!-- Minimal page styling for better first-paint -->
     <style>
-      /* Minimal neutral background so the app's React UI shows well while loading */
       html,body {height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;background:linear-gradient(180deg,#0f1724 0%, #081223 60%); color:#e6eef6;}
       #pre-root { display:flex; align-items:center; justify-content:center; height:100vh; }
       .brand-placeholder { text-align:center; color: #e6eef6; }
       .brand-placeholder h1 { margin:0; font-size:20px; color:#fff; background:linear-gradient(90deg,#FF7A59,#FFCB57); -webkit-background-clip:text; background-clip:text; color:transparent; }
       .brand-placeholder p { margin:8px 0 0; color:#b6c3d4; font-size:14px; }
     </style>
-
-    <!-- Add any additional analytics / meta scripts here -->
-    <script type="module" crossorigin src="/assets/index-H3pt3Pfr.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-n5IPSmjZ.css">
+    <script type="module" crossorigin src="/beautify-html/assets/index-DRwnyp9R.js"></script>
+    <link rel="stylesheet" crossorigin href="/beautify-html/assets/index-n5IPSmjZ.css">
   </head>
-
   <body>
-    <!-- small pre-root so the page doesn't appear blank before React loads -->
+    <!-- Pre-root placeholder (removed by React after mount) -->
     <div id="pre-root">
       <div class="brand-placeholder">
         <h1>JSONPDFConverter</h1>
@@ -56,10 +54,8 @@
     <!-- React mount point -->
     <div id="root"></div>
 
-    <!-- Example global ad slot (optional). For best results add ad placement inside your React components where you want them to appear. -->
-    <!-- Example: top banner (replace data-ad-client and data-ad-slot if needed) -->
+    <!-- Example global ad slot (optional) -->
     <div style="display:none" id="ads-top-container">
-      <!-- This is an example. Place <ins class="adsbygoogle"> tags inside React components where you want actual ads. -->
       <ins class="adsbygoogle"
            style="display:block"
            data-ad-client="ca-pub-5299949948790866"
@@ -71,16 +67,15 @@
       </script>
     </div>
 
-    <!-- Vite React entry (keep unchanged) -->
+    <!-- VITE + REACT ENTRY POINT -->
 
-    <!-- optional small script to remove the pre-root placeholder once React mounts (safe fallback) -->
+    <!-- Optional: hide pre-root after load (fallback) -->
     <script>
       (function() {
-        // If React mounts it will supersede the pre-root. This removes the placeholder after a short timeout to avoid blank page.
         window.addEventListener('load', function(){
           setTimeout(function(){
             var pre = document.getElementById('pre-root');
-            if(pre) pre.style.display = 'none';
+            if (pre) pre.style.display = 'none';
           }, 500);
         });
       })();
