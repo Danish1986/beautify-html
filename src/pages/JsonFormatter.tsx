@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Copy, Download, Upload, CheckCircle, AlertCircle, FileJson } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const sampleJSON = {
   "user": {
@@ -185,6 +187,15 @@ export default function JsonFormatter() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* AdSense - After JSON Tool */}
+      <div className="max-w-6xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.jsonFormatterInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Features Section */}

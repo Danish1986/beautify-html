@@ -9,6 +9,8 @@ import { Code, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 export default function ApiTester() {
   const [url, setUrl] = useState("");
@@ -205,6 +207,15 @@ export default function ApiTester() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* AdSense - After API Tester Tool */}
+      <div className="max-w-4xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.apiTesterInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Features Section */}

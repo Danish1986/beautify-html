@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO, SEO_CONFIG } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const tools = [
   {
@@ -133,6 +135,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* AdSense - Between Hero and Tools */}
+      <div className="container mx-auto px-4">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.homeHeroToTools}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
+      </div>
+
       {/* Tools Grid */}
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="text-center mb-12">
@@ -186,6 +197,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* AdSense - Between Features and Blog */}
+      <div className="container mx-auto px-4">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.homeFeaturesToBlog}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
+      </div>
 
       {/* Blog Section */}
       <section className="container mx-auto px-4 py-16 md:py-24">

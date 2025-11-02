@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Copy, Download, FileText, Eye } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const sampleText = `Welcome to DevTools
 
@@ -83,6 +85,12 @@ export default function TextToHtml() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <SEO 
+        title={TOOL_SEO.textToHtml.title}
+        description={TOOL_SEO.textToHtml.description}
+        keywords={TOOL_SEO.textToHtml.keywords}
+        path={TOOL_SEO.textToHtml.path}
+      />
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
@@ -170,6 +178,15 @@ export default function TextToHtml() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* AdSense - After Text to HTML Tool */}
+      <div className="max-w-6xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.textToHtmlInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Features Section */}

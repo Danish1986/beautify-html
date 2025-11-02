@@ -2,6 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Code2, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const navigation = [
   { name: "Home", path: "/" },
@@ -75,6 +77,15 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <main>{children}</main>
 
       <footer className="border-t bg-card mt-20">
+        {/* AdSense Footer Banner - DO NOT REMOVE */}
+        <div className="container mx-auto px-4 pt-8">
+          <AdSense 
+            adSlot={ADSENSE_CONFIG.adSlots.footerBanner}
+            adFormat="auto"
+            style={{ display: 'block', minHeight: '90px' }}
+          />
+        </div>
+        
         <div className="container mx-auto px-4 py-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div>

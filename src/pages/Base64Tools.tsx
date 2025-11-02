@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Copy, Binary, Upload } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 export default function Base64Tools() {
   const [encodeInput, setEncodeInput] = useState("");
@@ -161,6 +163,15 @@ export default function Base64Tools() {
             </Tabs>
           </CardContent>
         </Card>
+      </div>
+
+      {/* AdSense - After Base64 Tool */}
+      <div className="max-w-6xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.base64ToolsInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Features Section */}

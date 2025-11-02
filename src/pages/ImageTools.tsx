@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { Upload, Download, Image as ImageIcon, Loader2 } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 export default function ImageTools() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -246,6 +248,15 @@ export default function ImageTools() {
             )}
           </CardContent>
         </Card>
+      </div>
+
+      {/* AdSense - After Image Compression Tool */}
+      <div className="max-w-6xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.imageToolsInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Features Section */}

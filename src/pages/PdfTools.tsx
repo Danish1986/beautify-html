@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { PDFDocument } from "pdf-lib";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
+import { AdSense } from "@/components/AdSense";
+import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 export default function PdfTools() {
   const [mergeFiles, setMergeFiles] = useState<File[]>([]);
@@ -315,6 +317,15 @@ export default function PdfTools() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
+
+      {/* AdSense - After PDF Tools */}
+      <div className="max-w-4xl mx-auto">
+        <AdSense 
+          adSlot={ADSENSE_CONFIG.adSlots.pdfToolsInArticle}
+          adFormat="auto"
+          style={{ display: 'block', minHeight: '250px' }}
+        />
       </div>
 
       {/* Guide Section */}
