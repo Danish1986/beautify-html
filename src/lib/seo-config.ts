@@ -1,6 +1,6 @@
 export const SEO_CONFIG = {
   siteName: "DevTools",
-  siteUrl: "https://devtools.example.com",
+  siteUrl: "https://jsonpdfconverter.com",
   defaultTitle: "Free Online Developer Tools - JSON Formatter, Image Compressor & More | DevTools",
   defaultDescription: "Professional developer tools for formatting JSON, converting text to HTML, compressing images, and more. Free, fast, and privacy-focused - no registration required.",
   twitterHandle: "@devtools",
