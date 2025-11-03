@@ -536,12 +536,9 @@ export default function PdfTools() {
                   <Table2 className="mr-2 h-4 w-4" />
                   Convert to Excel
                 </Button>
-                <div className="bg-muted p-4 rounded-lg text-sm text-muted-foreground">
-                  <p className="font-semibold mb-2">Coming Soon!</p>
-                  <p>
-                    PDF to Excel conversion requires advanced table detection algorithms. We're working on this feature and it will be available soon. It will automatically detect and extract tables from your PDF documents.
-                  </p>
-                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  Tip: Works best with text-based PDFs containing tables. Each page will be exported as a separate sheet.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
