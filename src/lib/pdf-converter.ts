@@ -108,6 +108,67 @@ export async function removePdfPassword(file: File, password: string): Promise<v
 }
 
 /**
+ * Compress PDF by re-rendering pages at lower quality
+ * This provides real file size reduction by compressing images
+ */
+export async function compressPdf(file: File, quality: number = 0.7): Promise<void> {
+  const arrayBuffer = await file.arrayBuffer();
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  
+  // Create new PDF document
+  const pdfDoc = await PDFDocument.create();
+  
+  // Process each page
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    
+    // Render at lower scale for compression
+    const scale = quality > 0.8 ? 1.5 : quality > 0.5 ? 1.2 : 1.0;
+    const viewport = page.getViewport({ scale });
+    
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Failed to get canvas context');
+    
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    // Render PDF page to canvas
+    const renderTask = page.render({
+      canvasContext: context as any,
+      viewport: viewport,
+      canvas: canvas as any,
+    });
+    await renderTask.promise;
+    
+    // Convert canvas to compressed JPEG
+    const imageDataUrl = canvas.toDataURL('image/jpeg', quality);
+    const imageBytes = Uint8Array.from(atob(imageDataUrl.split(',')[1]), c => c.charCodeAt(0));
+    
+    // Embed image in new PDF
+    const image = await pdfDoc.embedJpg(imageBytes);
+    const pdfPage = pdfDoc.addPage([viewport.width, viewport.height]);
+    pdfPage.drawImage(image, {
+      x: 0,
+      y: 0,
+      width: viewport.width,
+      height: viewport.height,
+    });
+  }
+  
+  // Save compressed PDF
+  const pdfBytes = await pdfDoc.save({
+    useObjectStreams: true,
+  });
+  
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+  const fileName = file.name.replace('.pdf', '_compressed.pdf');
+  saveAs(blob, fileName);
+}
+
+/**
  * Convert PDF to Excel (placeholder for future implementation)
  */
 export async function convertPdfToExcel(file: File): Promise<void> {

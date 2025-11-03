@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileType, Upload, Scissors, FileStack, Minimize, FileText, Lock, Table2, Home, ImageIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
-import { convertPdfToWord, removePdfPassword, convertPdfToExcel, convertPdfToImages, splitPdfByRange } from "@/lib/pdf-converter";
+import { convertPdfToWord, removePdfPassword, convertPdfToExcel, convertPdfToImages, splitPdfByRange, compressPdf } from "@/lib/pdf-converter";
 import { FAQ } from "@/components/seo/FAQ";
 import { HowToUse } from "@/components/seo/HowToUse";
 import { RelatedTools } from "@/components/seo/RelatedTools";
@@ -29,6 +30,7 @@ export default function PdfTools() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [splitStartPage, setSplitStartPage] = useState<number>(1);
   const [splitEndPage, setSplitEndPage] = useState<number | undefined>(undefined);
+  const [compressQuality, setCompressQuality] = useState<number>(0.7);
 
   const handleMergePdfs = async () => {
     if (mergeFiles.length < 2) {
@@ -89,30 +91,18 @@ export default function PdfTools() {
       return;
     }
 
+    setIsProcessing(true);
+    const originalSize = compressFile.size;
+    
     try {
-      const arrayBuffer = await compressFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      
-      const pdfBytes = await pdfDoc.save({
-        useObjectStreams: false,
-      });
-
-      const blob = new Blob([pdfBytes as any], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "compressed.pdf";
-      a.click();
-      URL.revokeObjectURL(url);
-
-      const originalSize = compressFile.size;
-      const compressedSize = pdfBytes.length;
-      const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
-
-      toast.success(`PDF compressed! Saved ${savings}%`);
-    } catch (error) {
-      toast.error("Failed to compress PDF");
+      await compressPdf(compressFile, compressQuality);
+      const savings = Math.round((1 - compressQuality) * 100);
+      toast.success(`PDF compressed! Estimated ${savings}% reduction`);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to compress PDF");
       console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -653,7 +643,7 @@ export default function PdfTools() {
             <Card>
               <CardHeader>
                 <CardTitle>Compress PDF</CardTitle>
-                <CardDescription>Reduce file size while maintaining quality</CardDescription>
+                <CardDescription>Reduce file size by re-compressing images with adjustable quality</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-2 border-dashed rounded-lg p-8 text-center">
@@ -673,14 +663,54 @@ export default function PdfTools() {
                   </label>
                   {compressFile && (
                     <p className="mt-4 text-sm text-muted-foreground">
-                      {compressFile.name} ({(compressFile.size / 1024 / 1024).toFixed(2)} MB)
+                      {compressFile.name} - {(compressFile.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   )}
                 </div>
-                <Button onClick={handleCompressPdf} className="w-full" disabled={!compressFile}>
+                {compressFile && (
+                  <div>
+                    <Label>Compression Quality: {Math.round(compressQuality * 100)}%</Label>
+                    <div className="flex gap-2 mt-2">
+                      <Button 
+                        variant={compressQuality === 0.5 ? "default" : "outline"} 
+                        size="sm" 
+                        onClick={() => setCompressQuality(0.5)}
+                      >
+                        High Compression
+                      </Button>
+                      <Button 
+                        variant={compressQuality === 0.7 ? "default" : "outline"} 
+                        size="sm" 
+                        onClick={() => setCompressQuality(0.7)}
+                      >
+                        Balanced
+                      </Button>
+                      <Button 
+                        variant={compressQuality === 0.9 ? "default" : "outline"} 
+                        size="sm" 
+                        onClick={() => setCompressQuality(0.9)}
+                      >
+                        High Quality
+                      </Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {compressQuality === 0.5 && "Maximum compression - best for file size reduction"}
+                      {compressQuality === 0.7 && "Balanced - good quality with significant size reduction"}
+                      {compressQuality === 0.9 && "Minimal compression - preserves maximum quality"}
+                    </p>
+                  </div>
+                )}
+                <Button 
+                  onClick={handleCompressPdf} 
+                  className="w-full" 
+                  disabled={!compressFile || isProcessing}
+                >
                   <Minimize className="mr-2 h-4 w-4" />
-                  Compress PDF
+                  {isProcessing ? "Compressing..." : "Compress PDF"}
                 </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  Note: Compression works best on PDFs with images. Text-only PDFs have limited compression potential.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>

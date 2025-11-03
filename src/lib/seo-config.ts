@@ -27,9 +27,9 @@ export const TOOL_SEO = {
     path: "/text-to-html",
   },
   imageTools: {
-    title: "Image Compressor - Compress & Optimize Images Online | DevTools",
-    description: "Free online image compression tool. Reduce image file size while maintaining quality. Support for JPEG, PNG, and WebP formats. Download compressed images instantly.",
-    keywords: "image compressor, compress images online, image optimizer, reduce image size, jpg compressor, png compressor, optimize images",
+    title: "Free Image Tools: Compress, Convert JPEG to PNG, PNG to JPEG, WebP & Resize | Online",
+    description: "Free online image tools: compress images, convert JPEG to PNG, PNG to JPEG, convert to WebP format, and resize images. Optimize images for web with quality control. 100% free and secure.",
+    keywords: "image compressor, compress images online, jpeg to png, png to jpeg, convert to webp, image converter, resize image, image optimizer, reduce image size, jpg to png converter, png to jpg converter, webp converter, image format converter, optimize images for web",
     path: "/image-tools",
   },
   pdfTools: {

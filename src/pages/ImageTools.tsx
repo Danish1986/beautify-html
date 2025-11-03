@@ -4,14 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Upload, Download, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Upload, Download, Image as ImageIcon, Loader2, ArrowRightLeft, Maximize } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
+import { jpegToPng, pngToJpeg, toWebP, resizeImage, getImageDimensions } from "@/lib/image-converter";
 
 export default function ImageTools() {
+  // Compress states
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [compressedImage, setCompressedImage] = useState<string | null>(null);
   const [quality, setQuality] = useState([80]);
@@ -19,6 +22,20 @@ export default function ImageTools() {
   const [compressedSize, setCompressedSize] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Converter states
+  const [convertFile, setConvertFile] = useState<File | null>(null);
+  const [convertQuality, setConvertQuality] = useState([90]);
+  const [convertLoading, setConvertLoading] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+  
+  // Resize states
+  const [resizeFile, setResizeFile] = useState<File | null>(null);
+  const [resizeWidth, setResizeWidth] = useState<number>(1920);
+  const [resizeHeight, setResizeHeight] = useState<number>(1080);
+  const [resizeQuality, setResizeQuality] = useState([90]);
+  const [resizeLoading, setResizeLoading] = useState(false);
+  const [resizeDimensions, setResizeDimensions] = useState<{ width: number; height: number } | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -102,6 +119,112 @@ export default function ImageTools() {
   const savingsPercent = originalSize > 0 
     ? Math.round(((originalSize - compressedSize) / originalSize) * 100)
     : 0;
+  
+  // Converter handlers
+  const handleConvertFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+      setConvertFile(file);
+      try {
+        const dims = await getImageDimensions(file);
+        setImageDimensions(dims);
+      } catch (error) {
+        console.error("Failed to get image dimensions:", error);
+      }
+    }
+  };
+  
+  const handleJpegToPng = async () => {
+    if (!convertFile) {
+      toast.error("Please upload a JPEG image first");
+      return;
+    }
+    setConvertLoading(true);
+    try {
+      await jpegToPng(convertFile);
+      toast.success("JPEG converted to PNG successfully!");
+    } catch (error) {
+      toast.error("Failed to convert JPEG to PNG");
+      console.error(error);
+    } finally {
+      setConvertLoading(false);
+    }
+  };
+  
+  const handlePngToJpeg = async () => {
+    if (!convertFile) {
+      toast.error("Please upload a PNG image first");
+      return;
+    }
+    setConvertLoading(true);
+    try {
+      await pngToJpeg(convertFile, convertQuality[0] / 100);
+      toast.success("PNG converted to JPEG successfully!");
+    } catch (error) {
+      toast.error("Failed to convert PNG to JPEG");
+      console.error(error);
+    } finally {
+      setConvertLoading(false);
+    }
+  };
+  
+  const handleToWebP = async () => {
+    if (!convertFile) {
+      toast.error("Please upload an image first");
+      return;
+    }
+    setConvertLoading(true);
+    try {
+      await toWebP(convertFile, convertQuality[0] / 100);
+      toast.success("Image converted to WebP successfully!");
+    } catch (error) {
+      toast.error("Failed to convert to WebP");
+      console.error(error);
+    } finally {
+      setConvertLoading(false);
+    }
+  };
+  
+  // Resize handlers
+  const handleResizeFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+      setResizeFile(file);
+      try {
+        const dims = await getImageDimensions(file);
+        setResizeDimensions(dims);
+        setResizeWidth(dims.width);
+        setResizeHeight(dims.height);
+      } catch (error) {
+        console.error("Failed to get image dimensions:", error);
+      }
+    }
+  };
+  
+  const handleResizeImage = async () => {
+    if (!resizeFile) {
+      toast.error("Please upload an image first");
+      return;
+    }
+    setResizeLoading(true);
+    try {
+      await resizeImage(resizeFile, resizeWidth, resizeHeight, resizeQuality[0] / 100);
+      toast.success("Image resized successfully!");
+    } catch (error) {
+      toast.error("Failed to resize image");
+      console.error(error);
+    } finally {
+      setResizeLoading(false);
+    }
+  };
 
   const schema = {
     "@context": "https://schema.org",
@@ -129,14 +252,39 @@ export default function ImageTools() {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
           <ImageIcon className="h-8 w-8 text-purple-500" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Image Compression Tool</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Free Image Tools: Compress & Convert Images Online</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Reduce image file size while maintaining quality for faster loading times
+          Compress images, convert JPEG to PNG, PNG to JPEG, and to WebP format. Resize images with quality control.
         </p>
       </div>
 
       {/* Tool Section */}
       <div className="max-w-6xl mx-auto mb-16">
+        <Tabs defaultValue="compress" className="w-full">
+          <TabsList className="grid grid-cols-2 md:grid-cols-5 w-full gap-1">
+            <TabsTrigger value="compress">
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Compress
+            </TabsTrigger>
+            <TabsTrigger value="jpeg-to-png">
+              <ArrowRightLeft className="h-4 w-4 mr-2" />
+              JPEG → PNG
+            </TabsTrigger>
+            <TabsTrigger value="png-to-jpeg">
+              <ArrowRightLeft className="h-4 w-4 mr-2" />
+              PNG → JPEG
+            </TabsTrigger>
+            <TabsTrigger value="to-webp">
+              <ArrowRightLeft className="h-4 w-4 mr-2" />
+              To WebP
+            </TabsTrigger>
+            <TabsTrigger value="resize">
+              <Maximize className="h-4 w-4 mr-2" />
+              Resize
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="compress">
         <Card>
           <CardHeader>
             <CardTitle>Compress Your Image</CardTitle>
@@ -248,6 +396,239 @@ export default function ImageTools() {
             )}
           </CardContent>
         </Card>
+          </TabsContent>
+          
+          <TabsContent value="jpeg-to-png">
+            <Card>
+              <CardHeader>
+                <CardTitle>JPEG to PNG Converter</CardTitle>
+                <CardDescription>Convert JPEG/JPG images to PNG format (lossless)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="jpeg-to-png-upload">Upload JPEG Image</Label>
+                  <Input
+                    id="jpeg-to-png-upload"
+                    type="file"
+                    accept="image/jpeg,image/jpg"
+                    onChange={handleConvertFileChange}
+                    className="mt-2"
+                  />
+                  {convertFile && imageDimensions && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px ({formatFileSize(convertFile.size)})
+                    </p>
+                  )}
+                </div>
+                <Button 
+                  onClick={handleJpegToPng} 
+                  disabled={!convertFile || convertLoading}
+                  className="w-full gap-2"
+                >
+                  {convertLoading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Converting...</>
+                  ) : (
+                    <><ArrowRightLeft className="h-4 w-4" /> Convert to PNG</>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  PNG format supports transparency and is lossless. Great for logos and graphics.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="png-to-jpeg">
+            <Card>
+              <CardHeader>
+                <CardTitle>PNG to JPEG Converter</CardTitle>
+                <CardDescription>Convert PNG images to JPEG format with quality control</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="png-to-jpeg-upload">Upload PNG Image</Label>
+                  <Input
+                    id="png-to-jpeg-upload"
+                    type="file"
+                    accept="image/png"
+                    onChange={handleConvertFileChange}
+                    className="mt-2"
+                  />
+                  {convertFile && imageDimensions && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px ({formatFileSize(convertFile.size)})
+                    </p>
+                  )}
+                </div>
+                {convertFile && (
+                  <div>
+                    <Label>JPEG Quality: {convertQuality[0]}%</Label>
+                    <Slider
+                      value={convertQuality}
+                      onValueChange={setConvertQuality}
+                      min={1}
+                      max={100}
+                      step={1}
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Higher quality = larger file size. Recommended: 85-95%
+                    </p>
+                  </div>
+                )}
+                <Button 
+                  onClick={handlePngToJpeg} 
+                  disabled={!convertFile || convertLoading}
+                  className="w-full gap-2"
+                >
+                  {convertLoading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Converting...</>
+                  ) : (
+                    <><ArrowRightLeft className="h-4 w-4" /> Convert to JPEG</>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  JPEG is smaller than PNG but doesn't support transparency. Best for photos.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="to-webp">
+            <Card>
+              <CardHeader>
+                <CardTitle>Convert to WebP</CardTitle>
+                <CardDescription>Convert any image to modern WebP format (30% smaller)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="to-webp-upload">Upload Image (JPEG/PNG)</Label>
+                  <Input
+                    id="to-webp-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleConvertFileChange}
+                    className="mt-2"
+                  />
+                  {convertFile && imageDimensions && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px ({formatFileSize(convertFile.size)})
+                    </p>
+                  )}
+                </div>
+                {convertFile && (
+                  <div>
+                    <Label>WebP Quality: {convertQuality[0]}%</Label>
+                    <Slider
+                      value={convertQuality}
+                      onValueChange={setConvertQuality}
+                      min={1}
+                      max={100}
+                      step={1}
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      WebP offers superior compression. Recommended: 80-90%
+                    </p>
+                  </div>
+                )}
+                <Button 
+                  onClick={handleToWebP} 
+                  disabled={!convertFile || convertLoading}
+                  className="w-full gap-2"
+                >
+                  {convertLoading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Converting...</>
+                  ) : (
+                    <><ArrowRightLeft className="h-4 w-4" /> Convert to WebP</>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  WebP is 30% smaller than JPEG/PNG with same quality. Supported by all modern browsers.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="resize">
+            <Card>
+              <CardHeader>
+                <CardTitle>Resize Image</CardTitle>
+                <CardDescription>Resize images with custom dimensions and quality control</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="resize-upload">Upload Image</Label>
+                  <Input
+                    id="resize-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleResizeFileChange}
+                    className="mt-2"
+                  />
+                  {resizeFile && resizeDimensions && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Original: {resizeDimensions.width} × {resizeDimensions.height}px ({formatFileSize(resizeFile.size)})
+                    </p>
+                  )}
+                </div>
+                {resizeFile && (
+                  <>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="resize-width">Max Width (px)</Label>
+                        <Input
+                          id="resize-width"
+                          type="number"
+                          min="1"
+                          value={resizeWidth}
+                          onChange={(e) => setResizeWidth(parseInt(e.target.value) || 1920)}
+                          className="mt-2"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="resize-height">Max Height (px)</Label>
+                        <Input
+                          id="resize-height"
+                          type="number"
+                          min="1"
+                          value={resizeHeight}
+                          onChange={(e) => setResizeHeight(parseInt(e.target.value) || 1080)}
+                          className="mt-2"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Quality: {resizeQuality[0]}%</Label>
+                      <Slider
+                        value={resizeQuality}
+                        onValueChange={setResizeQuality}
+                        min={1}
+                        max={100}
+                        step={1}
+                        className="mt-2"
+                      />
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Image will be resized to fit within max dimensions while maintaining aspect ratio.
+                      </p>
+                    </div>
+                  </>
+                )}
+                <Button 
+                  onClick={handleResizeImage} 
+                  disabled={!resizeFile || resizeLoading}
+                  className="w-full gap-2"
+                >
+                  {resizeLoading ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> Resizing...</>
+                  ) : (
+                    <><Maximize className="h-4 w-4" /> Resize Image</>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* AdSense - After Image Compression Tool */}
