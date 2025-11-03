@@ -171,10 +171,15 @@ export default function PdfTools() {
       return;
     }
 
+    setIsProcessing(true);
     try {
       await convertPdfToExcel(excelFile);
+      toast.success("PDF converted to Excel successfully! Works best with text-based PDFs.");
     } catch (error: any) {
-      toast.info("PDF to Excel conversion is coming soon! This feature requires advanced table detection and will be available in the next update.");
+      toast.error(error.message || "Failed to convert PDF to Excel");
+      console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 

@@ -2,9 +2,11 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 import { PDFDocument } from 'pdf-lib';
+import * as XLSX from 'xlsx';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
-// Configure PDF.js worker - using CDN with https protocol for better compatibility
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// Configure PDF.js worker - using Vite's ?url import for proper worker loading
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 /**
  * Convert PDF to Word document
@@ -169,10 +171,85 @@ export async function compressPdf(file: File, quality: number = 0.7): Promise<vo
 }
 
 /**
- * Convert PDF to Excel (placeholder for future implementation)
+ * Convert PDF to Excel by extracting text content
+ * Works best with text-based PDFs containing table-like structures
  */
 export async function convertPdfToExcel(file: File): Promise<void> {
-  throw new Error('PDF to Excel conversion is coming soon. This feature requires table detection and extraction.');
+  const arrayBuffer = await file.arrayBuffer();
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  
+  const workbook = XLSX.utils.book_new();
+  
+  // Extract text from each page and create a worksheet
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    
+    // Extract text items with position data
+    const textItems = textContent.items as any[];
+    
+    // Group text items by Y-coordinate (rows)
+    const rows = new Map<number, Array<{ x: number; text: string }>>();
+    
+    textItems.forEach((item) => {
+      if (item.str && item.str.trim()) {
+        const y = Math.round(item.transform[5]); // Y-coordinate
+        const x = Math.round(item.transform[4]); // X-coordinate
+        
+        if (!rows.has(y)) {
+          rows.set(y, []);
+        }
+        rows.get(y)!.push({ x, text: item.str.trim() });
+      }
+    });
+    
+    // Sort rows by Y-coordinate (top to bottom)
+    const sortedRows = Array.from(rows.entries()).sort((a, b) => b[0] - a[0]);
+    
+    // Create worksheet data
+    const worksheetData: string[][] = [];
+    
+    sortedRows.forEach(([_, rowItems]) => {
+      // Sort items in row by X-coordinate (left to right)
+      const sortedItems = rowItems.sort((a, b) => a.x - b.x);
+      
+      // Detect columns by grouping items with similar X-coordinates
+      const columns: string[] = [];
+      let currentColumn = '';
+      let lastX = -Infinity;
+      
+      sortedItems.forEach((item, idx) => {
+        // If there's a significant gap (>50 units), start a new column
+        if (idx > 0 && item.x - lastX > 50) {
+          columns.push(currentColumn.trim());
+          currentColumn = item.text;
+        } else {
+          currentColumn += (currentColumn ? ' ' : '') + item.text;
+        }
+        lastX = item.x;
+      });
+      
+      // Add the last column
+      if (currentColumn.trim()) {
+        columns.push(currentColumn.trim());
+      }
+      
+      worksheetData.push(columns);
+    });
+    
+    // Create worksheet from data
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Page ${i}`);
+  }
+  
+  // Generate Excel file and download
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const fileName = file.name.replace('.pdf', '.xlsx');
+  saveAs(blob, fileName);
 }
 
 /**
