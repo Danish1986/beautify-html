@@ -443,8 +443,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="word-input"
                   />
-                  <label htmlFor="word-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF File</Button>
+                  <label 
+                    htmlFor="word-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF File
                   </label>
                   {wordFile && (
                     <p className="mt-4 text-sm text-muted-foreground">{wordFile.name}</p>
@@ -483,8 +486,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="password-input"
                   />
-                  <label htmlFor="password-input" className="cursor-pointer">
-                    <Button variant="outline">Select Protected PDF</Button>
+                  <label 
+                    htmlFor="password-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select Protected PDF
                   </label>
                   {passwordFile && (
                     <p className="mt-4 text-sm text-muted-foreground">{passwordFile.name}</p>
@@ -533,8 +539,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="excel-input"
                   />
-                  <label htmlFor="excel-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF File</Button>
+                  <label 
+                    htmlFor="excel-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF File
                   </label>
                   {excelFile && (
                     <p className="mt-4 text-sm text-muted-foreground">{excelFile.name}</p>
@@ -571,8 +580,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="merge-input"
                   />
-                  <label htmlFor="merge-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF Files</Button>
+                  <label 
+                    htmlFor="merge-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF Files
                   </label>
                   {mergeFiles.length > 0 && (
                     <p className="mt-4 text-sm text-muted-foreground">
@@ -604,8 +616,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="split-input"
                   />
-                  <label htmlFor="split-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF File</Button>
+                  <label 
+                    htmlFor="split-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF File
                   </label>
                   {splitFile && (
                     <p className="mt-4 text-sm text-muted-foreground">{splitFile.name}</p>
@@ -635,8 +650,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="compress-input"
                   />
-                  <label htmlFor="compress-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF File</Button>
+                  <label 
+                    htmlFor="compress-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF File
                   </label>
                   {compressFile && (
                     <p className="mt-4 text-sm text-muted-foreground">
@@ -668,8 +686,11 @@ export default function PdfTools() {
                     className="hidden"
                     id="convert-input"
                   />
-                  <label htmlFor="convert-input" className="cursor-pointer">
-                    <Button variant="outline">Select PDF File</Button>
+                  <label 
+                    htmlFor="convert-input" 
+                    className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 cursor-pointer"
+                  >
+                    Select PDF File
                   </label>
                   {convertFile && (
                     <p className="mt-4 text-sm text-muted-foreground">{convertFile.name}</p>
