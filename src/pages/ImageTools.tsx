@@ -6,12 +6,16 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Upload, Download, Image as ImageIcon, Loader2, ArrowRightLeft, Maximize } from "lucide-react";
+import { Upload, Download, Image as ImageIcon, Loader2, ArrowRightLeft, Maximize, FileJson, Binary, Code, FileText } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 import { jpegToPng, pngToJpeg, toWebP, resizeImage, getImageDimensions } from "@/lib/image-converter";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HowToUse } from "@/components/seo/HowToUse";
+import { FAQ } from "@/components/seo/FAQ";
+import { RelatedTools } from "@/components/seo/RelatedTools";
 
 export default function ImageTools() {
   // Compress states
@@ -238,6 +242,38 @@ export default function ImageTools() {
     "featureList": "Compress images, Optimize images, Reduce file size, Quality control, Download compressed images"
   };
 
+  const breadcrumbItems = [{ label: "Image Tools" }];
+
+  const howToSteps = [
+    { title: "Select Your Tool", description: "Choose from Compress, Convert (JPEG to PNG, PNG to JPEG, to WebP), or Resize. Each tool is optimized for specific image optimization tasks." },
+    { title: "Upload Image", description: "Click 'Browse' or drag your image file. The tool accepts JPEG, PNG, and other common formats. You'll see a preview and current file size." },
+    { title: "Adjust Settings", description: "Use the quality slider for compression, select output format for conversion, or set dimensions for resizing. Then process and download your optimized image." }
+  ];
+
+  const faqs = [
+    { question: "How to compress image without losing quality?", answer: "Use quality settings between 80-90% for visually lossless compression. Our tool reduces file size by removing metadata and optimizing encoding while preserving visible detail. For web use, 80% quality typically reduces file size by 40-60% with imperceptible quality loss." },
+    { question: "How to convert JPEG to PNG online free?", answer: "Select the 'JPEG → PNG' tab, upload your JPEG file, and click 'Convert to PNG'. PNG format supports transparency and is lossless, making it ideal for logos, graphics with text, and images requiring transparency. The conversion is instant and free." },
+    { question: "How to convert PNG to JPEG?", answer: "Use the 'PNG → JPEG' tab, upload your PNG, adjust the quality slider (85-95% recommended), and click convert. JPEG is better for photographs and significantly reduces file size compared to PNG. Note that transparency is lost in conversion." },
+    { question: "What's the best image compressor?", answer: "The best compressor balances quality and file size reduction. Our tool uses browser-native compression for client-side processing, meaning your images never leave your device. You control quality with a slider, preview results instantly, and can compare original vs compressed." },
+    { question: "How to convert images to WebP?", answer: "Click the 'To WebP' tab, upload any image format, adjust quality (90% recommended for best results), and convert. WebP provides 25-35% better compression than JPEG while maintaining similar quality, making it excellent for modern websites." },
+    { question: "Is WebP better than JPEG?", answer: "Yes, WebP typically achieves 25-35% smaller file sizes than JPEG at equivalent quality levels. It supports both lossy and lossless compression, plus transparency. Modern browsers (Chrome, Firefox, Edge, Safari 14+) fully support WebP, making it ideal for web performance optimization." },
+    { question: "How to reduce image file size?", answer: "Use our compression tool with 70-85% quality setting. This typically reduces file size by 50-70% while maintaining good visual quality. For further reduction, resize large images to actual display dimensions, convert to WebP format, and remove unnecessary metadata." },
+    { question: "Best image format for web?", answer: "WebP is best for modern websites (smaller files, better quality). Use JPEG for photographs and complex images, PNG for logos and graphics with transparency, SVG for icons and simple graphics. Always compress images before uploading to your website." },
+    { question: "How to resize images online?", answer: "Use the 'Resize' tab, upload your image, set target width and height in pixels, adjust quality (90% recommended), and click 'Resize Image'. Maintain aspect ratio by calculating proportions, or set custom dimensions for specific requirements." },
+    { question: "Does image compression reduce quality?", answer: "Lossy compression (JPEG, WebP) reduces quality slightly but imperceptibly at 70-90% settings. Lossless compression (PNG) maintains perfect quality but achieves less file size reduction. For web use, lossy compression at 80% offers the best balance of quality and file size." },
+    { question: "How to optimize images for website?", answer: "Resize to actual display size, compress at 70-85% quality, convert to WebP when possible, add proper width/height attributes in HTML, use lazy loading for below-fold images, and serve different sizes for mobile vs desktop using responsive images." },
+    { question: "JPEG vs PNG vs WebP comparison?", answer: "JPEG: Best for photos, lossy compression, no transparency, widely supported. PNG: Lossless, supports transparency, larger files, best for logos/graphics. WebP: Best compression, supports transparency, modern format, requires browser support. Choose based on image type and browser requirements." },
+    { question: "How to compress images for email?", answer: "Use 60-75% quality compression to significantly reduce file size. Resize to maximum 800px width for email viewing. Keep total email size under 2MB. Consider converting to JPEG for photos. Test in multiple email clients to ensure proper display." },
+    { question: "Best compression ratio for images?", answer: "For web: 70-85% balances quality and size. For email: 60-75% for smaller files. For print: 90-100% maintains detail. For thumbnails: 60-70% is acceptable. Test at different levels and choose the lowest quality that maintains acceptable visual appearance." }
+  ];
+
+  const relatedTools = [
+    { title: "PDF Tools", description: "Convert images to PDF", path: "/pdf-tools", icon: FileText },
+    { title: "Base64 Tools", description: "Encode images as Base64", path: "/base64-tools", icon: Binary },
+    { title: "API Tester", description: "Test image upload APIs", path: "/api-tester", icon: Code },
+    { title: "JSON Formatter", description: "Format image metadata", path: "/json-formatter", icon: FileJson }
+  ];
+
   return (
     <div className="container mx-auto px-4 py-12">
       <SEO 
@@ -247,6 +283,9 @@ export default function ImageTools() {
         path={TOOL_SEO.imageTools.path}
         schema={schema}
       />
+
+      <Breadcrumbs items={breadcrumbItems} />
+
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
@@ -632,13 +671,15 @@ export default function ImageTools() {
       </div>
 
       {/* AdSense - After Image Compression Tool */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mb-16">
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.imageToolsInArticle}
           adFormat="auto"
           style={{ display: 'block', minHeight: '250px' }}
         />
       </div>
+
+      <HowToUse steps={howToSteps} toolName="Image Tools" />
 
       {/* Features Section */}
       <div className="max-w-6xl mx-auto mb-16">
@@ -707,6 +748,10 @@ export default function ImageTools() {
           </CardContent>
         </Card>
       </div>
+
+      <FAQ faqs={faqs} />
+
+      <RelatedTools tools={relatedTools} />
     </div>
   );
 }

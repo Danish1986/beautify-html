@@ -3,11 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Copy, Download, Upload, CheckCircle, AlertCircle, FileJson } from "lucide-react";
+import { Copy, Download, Upload, CheckCircle, AlertCircle, FileJson, Code, FileText, Binary, Image as ImageIcon } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HowToUse } from "@/components/seo/HowToUse";
+import { FAQ } from "@/components/seo/FAQ";
+import { RelatedTools } from "@/components/seo/RelatedTools";
 
 const sampleJSON = {
   "user": {
@@ -91,6 +95,36 @@ export default function JsonFormatter() {
     "featureList": "Format JSON, Minify JSON, Validate JSON, Copy to clipboard, Download JSON"
   };
 
+  const breadcrumbItems = [{ label: "JSON Formatter" }];
+
+  const howToSteps = [
+    { title: "Paste Your JSON", description: "Copy your JSON data and paste it into the input box. You can also click 'Load Sample' to see an example." },
+    { title: "Choose Action", description: "Click 'Format JSON' for readable formatting, 'Minify JSON' to compress, or 'Validate Only' to check for errors." },
+    { title: "Copy or Download", description: "Once processed, copy the result to your clipboard or download it as a .json file for use in your project." }
+  ];
+
+  const faqs = [
+    { question: "What is JSON formatter?", answer: "A JSON formatter is a tool that takes unformatted or minified JSON data and makes it human-readable by adding proper indentation and line breaks. It helps developers quickly understand data structures and debug JSON-related issues." },
+    { question: "How to format JSON online free?", answer: "Simply paste your JSON data into our formatter, then click the 'Format JSON' button. The tool will instantly beautify your JSON with proper indentation, making it easy to read. It's completely free with no registration required." },
+    { question: "How to validate JSON?", answer: "Use our JSON validator by pasting your data and clicking 'Validate Only'. The tool checks for syntax errors like missing commas, unclosed brackets, or invalid characters. Valid JSON shows a green checkmark, while errors are highlighted in red." },
+    { question: "What's the difference between JSON and XML?", answer: "JSON is lighter and faster than XML. JSON uses key-value pairs and is native to JavaScript, while XML uses tags similar to HTML. JSON is generally preferred for web APIs and data exchange due to its simplicity and smaller file size." },
+    { question: "How to minify JSON?", answer: "Click the 'Minify JSON' button to remove all whitespace, indentation, and line breaks from your JSON. This reduces file size by up to 40%, making it ideal for API responses and reducing bandwidth usage in production environments." },
+    { question: "Is JSON formatter safe to use?", answer: "Yes, our JSON formatter processes all data locally in your browser. Your JSON data never leaves your device or gets uploaded to any server, ensuring complete privacy and security for sensitive information." },
+    { question: "How to pretty print JSON?", answer: "Pretty printing is another term for formatting JSON. Our tool automatically adds indentation (2 spaces) and line breaks to make your JSON readable. This is essential for debugging and code reviews." },
+    { question: "What is JSON used for?", answer: "JSON is used for data exchange between web servers and clients, API responses, configuration files, storing structured data in databases (like MongoDB), and as a data format in mobile apps. It's the standard for modern web development." },
+    { question: "How to fix JSON syntax errors?", answer: "Our validator highlights common errors like missing quotes around keys, trailing commas, unclosed brackets, or invalid escape characters. Check the error message, locate the line mentioned, and correct the syntax according to JSON standards." },
+    { question: "Can JSON contain arrays?", answer: "Yes, JSON fully supports arrays using square brackets []. Arrays can contain strings, numbers, objects, other arrays, booleans, or null values. Arrays are ordered collections and are essential for representing lists of data." },
+    { question: "Best practices for JSON formatting?", answer: "Use consistent indentation (2 or 4 spaces), validate JSON before deployment, use meaningful key names, keep structures flat when possible, minify for production, and format for development. Always validate your JSON to avoid runtime errors." },
+    { question: "How to convert JSON to CSV?", answer: "While our tool focuses on JSON formatting, you can copy the formatted JSON and use a dedicated JSON-to-CSV converter. For simple data structures, you can also manually extract the values into a spreadsheet application." }
+  ];
+
+  const relatedTools = [
+    { title: "API Tester", description: "Test REST APIs that return JSON responses", path: "/api-tester", icon: Code },
+    { title: "Text to HTML", description: "Convert plain text to HTML format", path: "/text-to-html", icon: FileText },
+    { title: "Base64 Tools", description: "Encode and decode Base64 data", path: "/base64-tools", icon: Binary },
+    { title: "Image Tools", description: "Compress and convert images", path: "/image-tools", icon: ImageIcon }
+  ];
+
   return (
     <div className="container mx-auto px-4 py-12">
       <SEO 
@@ -100,6 +134,9 @@ export default function JsonFormatter() {
         path={TOOL_SEO.jsonFormatter.path}
         schema={schema}
       />
+
+      <Breadcrumbs items={breadcrumbItems} />
+
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
@@ -190,13 +227,15 @@ export default function JsonFormatter() {
       </div>
 
       {/* AdSense - After JSON Tool */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mb-16">
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.jsonFormatterInArticle}
           adFormat="auto"
           style={{ display: 'block', minHeight: '250px' }}
         />
       </div>
+
+      <HowToUse steps={howToSteps} toolName="JSON Formatter" />
 
       {/* Features Section */}
       <div className="max-w-6xl mx-auto mb-16">
@@ -259,6 +298,10 @@ export default function JsonFormatter() {
           </CardContent>
         </Card>
       </div>
+
+      <FAQ faqs={faqs} />
+
+      <RelatedTools tools={relatedTools} />
     </div>
   );
 }

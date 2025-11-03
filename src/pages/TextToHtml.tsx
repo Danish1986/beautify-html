@@ -3,11 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Copy, Download, FileText, Eye } from "lucide-react";
+import { Copy, Download, FileText, Eye, FileJson, Binary, Image as ImageIcon, Code } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HowToUse } from "@/components/seo/HowToUse";
+import { FAQ } from "@/components/seo/FAQ";
+import { RelatedTools } from "@/components/seo/RelatedTools";
 
 const sampleText = `Welcome to DevTools
 
@@ -83,6 +87,36 @@ export default function TextToHtml() {
     toast.success("HTML file downloaded!");
   };
 
+  const breadcrumbItems = [{ label: "Text to HTML" }];
+
+  const howToSteps = [
+    { title: "Enter Your Text", description: "Type or paste your plain text into the input box. The tool automatically detects URLs and email addresses for conversion." },
+    { title: "Convert to HTML", description: "Click the 'Convert to HTML' button to transform your text into properly formatted HTML with paragraph tags, line breaks, and clickable links." },
+    { title: "Preview and Download", description: "Use the 'Show Preview' button to see how your HTML will look, then copy the code or download it as a complete HTML file." }
+  ];
+
+  const faqs = [
+    { question: "How to convert text to HTML?", answer: "Paste your plain text into our converter and click 'Convert to HTML'. The tool automatically formats paragraphs, converts line breaks to <br> tags, and transforms URLs and emails into clickable links. You can preview the result before copying or downloading." },
+    { question: "How to convert plain text to HTML online?", answer: "Our online tool makes conversion instant and free. Simply paste text, click convert, and get clean HTML code. No installation or registration needed. The tool runs entirely in your browser for maximum privacy and speed." },
+    { question: "Does HTML converter work for email?", answer: "Yes! The converted HTML works perfectly for email clients. It creates properly formatted paragraphs and links that display correctly in Gmail, Outlook, and other email services. Make sure to test in your specific email client before sending to large lists." },
+    { question: "How to create HTML from text automatically?", answer: "Our tool automatically detects text patterns and converts them to HTML. URLs become <a> tags, emails get mailto: links, double line breaks create <p> tags, and single breaks become <br> tags. It follows HTML5 best practices automatically." },
+    { question: "What's the best text to HTML converter?", answer: "The best converter should handle links automatically, preserve formatting, create semantic HTML, and provide a live preview. Our tool does all this while running securely in your browser without uploading your data to servers." },
+    { question: "How to format paragraphs in HTML?", answer: "Our tool wraps text blocks separated by empty lines in <p> tags (paragraph elements). Lines within the same paragraph are separated with <br> tags. This creates proper semantic HTML that's accessible and SEO-friendly." },
+    { question: "How to make links in HTML?", answer: "The tool automatically detects URLs (http:// or https://) and converts them to <a href=\"url\">url</a> tags with target=\"_blank\" for external links and rel=\"noopener noreferrer\" for security. Email addresses become mailto: links automatically." },
+    { question: "Is text to HTML conversion free?", answer: "Yes, our tool is completely free with unlimited conversions. No registration, no hidden fees, no credit card required. All processing happens in your browser, so there are no server costs limiting usage." },
+    { question: "Can I convert Word to HTML?", answer: "While this tool works best with plain text, you can copy text from Word documents and convert it. For complex Word documents with images and formatting, consider specialized Word-to-HTML converters or save directly from Word as HTML." },
+    { question: "How to preserve formatting in HTML?", answer: "The tool preserves line breaks, paragraph structure, and basic text flow. For advanced formatting like bold, italics, or colors, you'll need to manually add HTML tags like <strong>, <em>, or <span style=\"\"> after conversion." },
+    { question: "Best practices for HTML conversion?", answer: "Organize text with clear paragraph breaks before converting. Use double line breaks between paragraphs. Include full URLs (with http://) for automatic link detection. Always preview the result to verify formatting before using in production." },
+    { question: "How to convert text to HTML for emails?", answer: "Convert your text, then wrap the result in a proper email template with DOCTYPE, html, head, and body tags. Use inline CSS for styling as many email clients don't support external stylesheets. Test in multiple email clients before sending." }
+  ];
+
+  const relatedTools = [
+    { title: "JSON Formatter", description: "Format and validate JSON data", path: "/json-formatter", icon: FileJson },
+    { title: "PDF Tools", description: "Convert and merge PDF files", path: "/pdf-tools", icon: FileText },
+    { title: "Base64 Tools", description: "Encode HTML for embedding", path: "/base64-tools", icon: Binary },
+    { title: "Image Tools", description: "Optimize images for web", path: "/image-tools", icon: ImageIcon }
+  ];
+
   return (
     <div className="container mx-auto px-4 py-12">
       <SEO 
@@ -91,6 +125,9 @@ export default function TextToHtml() {
         keywords={TOOL_SEO.textToHtml.keywords}
         path={TOOL_SEO.textToHtml.path}
       />
+
+      <Breadcrumbs items={breadcrumbItems} />
+
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
@@ -181,13 +218,15 @@ export default function TextToHtml() {
       </div>
 
       {/* AdSense - After Text to HTML Tool */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mb-16">
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.textToHtmlInArticle}
           adFormat="auto"
           style={{ display: 'block', minHeight: '250px' }}
         />
       </div>
+
+      <HowToUse steps={howToSteps} toolName="Text to HTML Converter" />
 
       {/* Features Section */}
       <div className="max-w-6xl mx-auto mb-16">
@@ -255,6 +294,10 @@ export default function TextToHtml() {
           </CardContent>
         </Card>
       </div>
+
+      <FAQ faqs={faqs} />
+
+      <RelatedTools tools={relatedTools} />
     </div>
   );
 }

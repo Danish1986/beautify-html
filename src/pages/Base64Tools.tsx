@@ -4,11 +4,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Copy, Binary, Upload } from "lucide-react";
+import { Copy, Binary, Upload, Code, FileJson, FileText, Image as ImageIcon } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { HowToUse } from "@/components/seo/HowToUse";
+import { FAQ } from "@/components/seo/FAQ";
+import { RelatedTools } from "@/components/seo/RelatedTools";
 
 export default function Base64Tools() {
   const [encodeInput, setEncodeInput] = useState("");
@@ -53,6 +57,36 @@ export default function Base64Tools() {
     "featureList": "Encode Base64, Decode Base64, Copy to clipboard"
   };
 
+  const breadcrumbItems = [{ label: "Base64 Tools" }];
+
+  const howToSteps = [
+    { title: "Choose Encode or Decode", description: "Select the 'Encode' tab to convert text to Base64, or 'Decode' tab to convert Base64 back to readable text." },
+    { title: "Paste Your Data", description: "Enter your plain text in the encode tab, or paste your Base64 string in the decode tab." },
+    { title: "Convert and Copy", description: "Click the encode or decode button, then copy the result to your clipboard for use in your project." }
+  ];
+
+  const faqs = [
+    { question: "What is Base64 encoding?", answer: "Base64 is an encoding scheme that converts binary data into ASCII text format using 64 characters (A-Z, a-z, 0-9, +, /). It's used to safely transmit data over text-based protocols and ensure data integrity during transport across different systems." },
+    { question: "How to encode Base64 online?", answer: "Paste your text into our encoder and click 'Encode to Base64'. The tool instantly converts your text using the btoa() method, which is the standard browser API for Base64 encoding. The result is a Base64 string you can copy and use anywhere." },
+    { question: "How to decode Base64 string?", answer: "Switch to the 'Decode' tab, paste your Base64 string, and click 'Decode from Base64'. The tool uses the atob() method to convert the Base64 string back to readable text. Invalid Base64 strings will show an error message." },
+    { question: "Is Base64 encryption secure?", answer: "No, Base64 is encoding, not encryption. It provides no security or privacy protection. Anyone can easily decode Base64 data. Never use Base64 alone to protect passwords, API keys, or sensitive information. Use proper encryption like AES-256 or RSA instead." },
+    { question: "What is Base64 used for?", answer: "Base64 is used for embedding images in HTML/CSS (data URIs), sending binary data in JSON/XML, encoding email attachments (MIME), Basic Authentication headers in HTTP, storing binary data in databases, and safely passing data in URLs." },
+    { question: "How to convert image to Base64?", answer: "While this tool handles text, you can convert images to Base64 by reading the image file as binary data and encoding it. The result can be used in img src=\"data:image/png;base64,...\" tags to embed images directly in HTML without external files." },
+    { question: "Base64 encoding vs encryption?", answer: "Encoding (Base64) transforms data format for compatibility and transmission. Anyone can decode it. Encryption (AES, RSA) scrambles data with a secret key for security. Only someone with the correct key can decrypt it. Use encryption for security, Base64 for transport." },
+    { question: "How to decode Base64 to text?", answer: "Our decoder automatically converts Base64 strings back to plain text. The process reverses the encoding by converting each group of four Base64 characters back to three bytes of original data. Invalid characters or incorrect padding will trigger an error." },
+    { question: "Why use Base64 encoding?", answer: "Base64 ensures data integrity when transmitting over text-based systems that might corrupt binary data. It's essential for email attachments, embedding images in HTML, sending binary data in JSON APIs, and including credentials in HTTP headers without special character issues." },
+    { question: "Base64 encoding examples?", answer: "Text 'Hello' encodes to 'SGVsbG8='. The '=' is padding. 'Hello World' becomes 'SGVsbG8gV29ybGQ='. Each group of 3 input bytes becomes 4 Base64 characters. The encoded output is about 33% larger than the original." },
+    { question: "Is Base64 safe for passwords?", answer: "No! Base64 is trivially reversible. Never use it for passwords. Anyone can decode Base64 instantly. Use proper password hashing algorithms like bcrypt, Argon2, or PBKDF2. These are one-way functions designed specifically for password security with salt and multiple iterations." },
+    { question: "How to use Base64 in APIs?", answer: "Base64 is common in API authentication (Basic Auth uses Base64-encoded credentials), sending binary files in JSON responses, embedding images as data URIs, and encoding special characters in URL parameters. Always use HTTPS when transmitting Base64-encoded sensitive data." }
+  ];
+
+  const relatedTools = [
+    { title: "API Tester", description: "Test APIs with Base64 authentication", path: "/api-tester", icon: Code },
+    { title: "JSON Formatter", description: "Format JSON with Base64 data", path: "/json-formatter", icon: FileJson },
+    { title: "Image Tools", description: "Convert images to Base64", path: "/image-tools", icon: ImageIcon },
+    { title: "Text to HTML", description: "Convert text formats", path: "/text-to-html", icon: FileText }
+  ];
+
   return (
     <div className="container mx-auto px-4 py-12">
       <SEO 
@@ -62,6 +96,9 @@ export default function Base64Tools() {
         path={TOOL_SEO.base64Tools.path}
         schema={schema}
       />
+
+      <Breadcrumbs items={breadcrumbItems} />
+
       {/* Hero Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
@@ -166,13 +203,15 @@ export default function Base64Tools() {
       </div>
 
       {/* AdSense - After Base64 Tool */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mb-16">
         <AdSense 
           adSlot={ADSENSE_CONFIG.adSlots.base64ToolsInArticle}
           adFormat="auto"
           style={{ display: 'block', minHeight: '250px' }}
         />
       </div>
+
+      <HowToUse steps={howToSteps} toolName="Base64 Encoder & Decoder" />
 
       {/* Features Section */}
       <div className="max-w-6xl mx-auto mb-16">
@@ -249,6 +288,10 @@ export default function Base64Tools() {
           </CardContent>
         </Card>
       </div>
+
+      <FAQ faqs={faqs} />
+
+      <RelatedTools tools={relatedTools} />
     </div>
   );
 }
