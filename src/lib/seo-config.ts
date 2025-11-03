@@ -33,9 +33,9 @@ export const TOOL_SEO = {
     path: "/image-tools",
   },
   pdfTools: {
-    title: "PDF Tools - Merge, Split, Compress PDF Files Online | DevTools",
-    description: "Free online PDF tools for merging, splitting, and compressing PDF files. Fast, secure, and easy to use. No registration required.",
-    keywords: "pdf tools, merge pdf, split pdf, compress pdf, pdf merger, pdf splitter, pdf compressor, pdf to image",
+    title: "PDF Tools: Convert PDF to Word, Remove Password, Compress & Merge | Free Online",
+    description: "Free online PDF tools: convert PDF to Word/Excel, remove PDF password protection, compress, merge & split files. Process securely in your browser. No registration required.",
+    keywords: "pdf to word, pdf password remover, compress pdf, merge pdf, split pdf, pdf to word converter online, free pdf password remover online, reduce pdf size, pdf to excel, unlock pdf, pdf converter, remove password from pdf, pdf to docx converter",
     path: "/pdf-tools",
   },
   base64Tools: {
