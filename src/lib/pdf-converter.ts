@@ -3,12 +3,8 @@ import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { saveAs } from 'file-saver';
 import { PDFDocument } from 'pdf-lib';
 
-// Configure PDF.js worker using ESM import
-const workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString();
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+// Configure PDF.js worker - using CDN with https protocol for better compatibility
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 /**
  * Convert PDF to Word document
@@ -116,4 +112,85 @@ export async function removePdfPassword(file: File, password: string): Promise<v
  */
 export async function convertPdfToExcel(file: File): Promise<void> {
   throw new Error('PDF to Excel conversion is coming soon. This feature requires table detection and extraction.');
+}
+
+/**
+ * Convert PDF pages to images
+ */
+export async function convertPdfToImages(file: File): Promise<void> {
+  const arrayBuffer = await file.arrayBuffer();
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 2.0 });
+    
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Failed to get canvas context');
+    
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    // Render PDF page to canvas
+    const renderTask = page.render({
+      canvasContext: context as any,
+      viewport: viewport,
+      canvas: canvas as any,
+    });
+    await renderTask.promise;
+    
+    // Convert canvas to blob and download
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const fileName = file.name.replace('.pdf', `_page_${i}.png`);
+        saveAs(blob, fileName);
+      }
+    }, 'image/png');
+  }
+}
+
+/**
+ * Split PDF into specific page range
+ */
+export async function splitPdfByRange(
+  file: File, 
+  startPage: number, 
+  endPage?: number
+): Promise<void> {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdfDoc = await PDFDocument.load(arrayBuffer);
+  const pageCount = pdfDoc.getPageCount();
+  
+  // Validate page numbers
+  if (startPage < 1 || startPage > pageCount) {
+    throw new Error(`Invalid start page. PDF has ${pageCount} pages.`);
+  }
+  
+  const lastPage = endPage && endPage <= pageCount ? endPage : startPage;
+  
+  if (lastPage < startPage) {
+    throw new Error('End page must be greater than or equal to start page.');
+  }
+  
+  // Extract pages (convert to 0-based index)
+  const pagesToExtract = [];
+  for (let i = startPage - 1; i < lastPage; i++) {
+    pagesToExtract.push(i);
+  }
+  
+  const newPdf = await PDFDocument.create();
+  const copiedPages = await newPdf.copyPages(pdfDoc, pagesToExtract);
+  copiedPages.forEach((page) => newPdf.addPage(page));
+  
+  const pdfBytes = await newPdf.save();
+  const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+  
+  const fileName = file.name.replace(
+    '.pdf', 
+    `_pages_${startPage}-${lastPage}.pdf`
+  );
+  saveAs(blob, fileName);
 }

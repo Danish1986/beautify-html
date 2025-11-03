@@ -11,7 +11,7 @@ import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
-import { convertPdfToWord, removePdfPassword, convertPdfToExcel } from "@/lib/pdf-converter";
+import { convertPdfToWord, removePdfPassword, convertPdfToExcel, convertPdfToImages, splitPdfByRange } from "@/lib/pdf-converter";
 import { FAQ } from "@/components/seo/FAQ";
 import { HowToUse } from "@/components/seo/HowToUse";
 import { RelatedTools } from "@/components/seo/RelatedTools";
@@ -27,6 +27,8 @@ export default function PdfTools() {
   const [password, setPassword] = useState<string>("");
   const [excelFile, setExcelFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [splitStartPage, setSplitStartPage] = useState<number>(1);
+  const [splitEndPage, setSplitEndPage] = useState<number | undefined>(undefined);
 
   const handleMergePdfs = async () => {
     if (mergeFiles.length < 2) {
@@ -66,30 +68,18 @@ export default function PdfTools() {
       return;
     }
 
+    setIsProcessing(true);
     try {
-      const arrayBuffer = await splitFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const pageCount = pdfDoc.getPageCount();
-
-      for (let i = 0; i < pageCount; i++) {
-        const newPdf = await PDFDocument.create();
-        const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
-        newPdf.addPage(copiedPage);
-
-        const pdfBytes = await newPdf.save();
-        const blob = new Blob([pdfBytes as any], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `page-${i + 1}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-
-      toast.success(`Split into ${pageCount} pages successfully!`);
-    } catch (error) {
-      toast.error("Failed to split PDF");
+      await splitPdfByRange(splitFile, splitStartPage, splitEndPage);
+      const pageRange = splitEndPage && splitEndPage !== splitStartPage 
+        ? `${splitStartPage}-${splitEndPage}` 
+        : `${splitStartPage}`;
+      toast.success(`Successfully extracted page(s) ${pageRange}!`);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to split PDF");
       console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -132,17 +122,15 @@ export default function PdfTools() {
       return;
     }
 
-    toast.info("PDF to Image conversion requires additional libraries. This is a simplified version that extracts page info.");
-    
+    setIsProcessing(true);
     try {
-      const arrayBuffer = await convertFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const pageCount = pdfDoc.getPageCount();
-
-      toast.success(`PDF has ${pageCount} pages. Full conversion feature coming soon!`);
-    } catch (error) {
-      toast.error("Failed to process PDF");
+      await convertPdfToImages(convertFile);
+      toast.success("PDF pages converted to images successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to convert PDF to images");
       console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -604,7 +592,7 @@ export default function PdfTools() {
             <Card>
               <CardHeader>
                 <CardTitle>Split PDF</CardTitle>
-                <CardDescription>Extract each page as a separate PDF file</CardDescription>
+                <CardDescription>Extract specific pages from your PDF</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-2 border-dashed rounded-lg p-8 text-center">
@@ -626,9 +614,36 @@ export default function PdfTools() {
                     <p className="mt-4 text-sm text-muted-foreground">{splitFile.name}</p>
                   )}
                 </div>
-                <Button onClick={handleSplitPdf} className="w-full" disabled={!splitFile}>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="start-page">Start Page</Label>
+                    <Input
+                      id="start-page"
+                      type="number"
+                      min="1"
+                      value={splitStartPage}
+                      onChange={(e) => setSplitStartPage(parseInt(e.target.value) || 1)}
+                      placeholder="1"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="end-page">End Page (optional)</Label>
+                    <Input
+                      id="end-page"
+                      type="number"
+                      min="1"
+                      value={splitEndPage || ''}
+                      onChange={(e) => setSplitEndPage(e.target.value ? parseInt(e.target.value) : undefined)}
+                      placeholder="Leave empty for single page"
+                    />
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  <p>Enter page numbers to extract. For a single page, only fill the start page. For a range, fill both fields.</p>
+                </div>
+                <Button onClick={handleSplitPdf} className="w-full" disabled={!splitFile || isProcessing}>
                   <Scissors className="mr-2 h-4 w-4" />
-                  Split PDF
+                  {isProcessing ? "Processing..." : "Extract Pages"}
                 </Button>
               </CardContent>
             </Card>
@@ -674,7 +689,7 @@ export default function PdfTools() {
             <Card>
               <CardHeader>
                 <CardTitle>PDF to Image</CardTitle>
-                <CardDescription>Convert PDF pages to image format (feature in development)</CardDescription>
+                <CardDescription>Convert each PDF page to PNG images</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="border-2 border-dashed rounded-lg p-8 text-center">
@@ -696,9 +711,9 @@ export default function PdfTools() {
                     <p className="mt-4 text-sm text-muted-foreground">{convertFile.name}</p>
                   )}
                 </div>
-                <Button onClick={handleConvertToImage} className="w-full" disabled={!convertFile}>
+                <Button onClick={handleConvertToImage} className="w-full" disabled={!convertFile || isProcessing}>
                   <ImageIcon className="mr-2 h-4 w-4" />
-                  Convert to Images
+                  {isProcessing ? "Converting..." : "Convert to Images"}
                 </Button>
               </CardContent>
             </Card>
