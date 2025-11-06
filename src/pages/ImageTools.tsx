@@ -33,6 +33,9 @@ export default function ImageTools() {
   const [convertLoading, setConvertLoading] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
   const [estimatedJpegSize, setEstimatedJpegSize] = useState<number | null>(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   
   // Resize states
   const [resizeFile, setResizeFile] = useState<File | null>(null);
@@ -152,6 +155,40 @@ export default function ImageTools() {
     }
   };
 
+  const generateQualityPreview = async (file: File, quality: number) => {
+    try {
+      setIsGeneratingPreview(true);
+      const img = await loadImage(file);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+      
+      ctx.drawImage(img, 0, 0);
+      
+      return new Promise<string | null>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              resolve(url);
+            } else {
+              resolve(null);
+            }
+          },
+          'image/jpeg',
+          quality / 100
+        );
+      });
+    } catch (error) {
+      console.error('Failed to generate preview:', error);
+      return null;
+    } finally {
+      setIsGeneratingPreview(false);
+    }
+  };
+
   const handleConvertFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -159,28 +196,72 @@ export default function ImageTools() {
         toast.error("Please select a valid image file");
         return;
       }
+      
+      // Clean up previous URLs
+      if (originalImageUrl) URL.revokeObjectURL(originalImageUrl);
+      if (previewImageUrl) URL.revokeObjectURL(previewImageUrl);
+      
       setConvertFile(file);
+      
+      // Create original image URL
+      const originalUrl = URL.createObjectURL(file);
+      setOriginalImageUrl(originalUrl);
+      
       try {
         const dims = await getImageDimensions(file);
         setImageDimensions(dims);
         
+        // Generate initial preview at current quality
         const estimatedSize = await estimateJpegSize(file, convertQuality[0]);
         setEstimatedJpegSize(estimatedSize);
+        
+        const previewUrl = await generateQualityPreview(file, convertQuality[0]);
+        setPreviewImageUrl(previewUrl);
       } catch (error) {
-        console.error("Failed to get image dimensions:", error);
+        console.error("Failed to process image:", error);
       }
     }
   };
 
+  // Debounce preview generation for performance
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (convertFile) {
-      const updateEstimation = async () => {
+      // Clear existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      
+      // Set new timeout for preview generation
+      debounceTimeoutRef.current = setTimeout(async () => {
         const estimatedSize = await estimateJpegSize(convertFile, convertQuality[0]);
         setEstimatedJpegSize(estimatedSize);
-      };
-      updateEstimation();
+        
+        if (previewImageUrl) {
+          URL.revokeObjectURL(previewImageUrl);
+        }
+        
+        const previewUrl = await generateQualityPreview(convertFile, convertQuality[0]);
+        setPreviewImageUrl(previewUrl);
+      }, 300); // 300ms debounce
     }
+    
+    // Cleanup
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
   }, [convertQuality, convertFile]);
+
+  // Cleanup URLs on unmount
+  useEffect(() => {
+    return () => {
+      if (originalImageUrl) URL.revokeObjectURL(originalImageUrl);
+      if (previewImageUrl) URL.revokeObjectURL(previewImageUrl);
+    };
+  }, []);
   
   const handleJpegToPng = async () => {
     if (!convertFile) {
@@ -534,24 +615,57 @@ export default function ImageTools() {
                     className="mt-2"
                   />
                   {convertFile && imageDimensions && (
-                    <div className="mt-2 space-y-1">
+                    <div className="mt-4 space-y-4">
+                      {/* File Info */}
                       <p className="text-sm text-muted-foreground">
                         {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px
                       </p>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div className="bg-muted p-2 rounded">
-                          <p className="text-xs text-muted-foreground">Original PNG</p>
-                          <p className="font-medium">{formatFileSize(convertFile.size)}</p>
+                      
+                      {/* Image Comparison View */}
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Original Image */}
+                        <div className="space-y-2">
+                          <div className="bg-muted p-2 rounded text-center">
+                            <p className="text-xs text-muted-foreground font-medium">Original PNG</p>
+                            <p className="text-sm font-bold">{formatFileSize(convertFile.size)}</p>
+                          </div>
+                          {originalImageUrl && (
+                            <div className="border rounded-lg overflow-hidden bg-muted">
+                              <img 
+                                src={originalImageUrl} 
+                                alt="Original" 
+                                className="w-full h-auto max-h-64 object-contain"
+                              />
+                            </div>
+                          )}
                         </div>
-                        <div className="bg-muted p-2 rounded">
-                          <p className="text-xs text-muted-foreground">Estimated JPEG</p>
-                          <p className="font-medium">
-                            {estimatedJpegSize ? formatFileSize(estimatedJpegSize) : 'Calculating...'}
-                          </p>
-                          {estimatedJpegSize && convertFile.size > estimatedJpegSize && (
-                            <p className="text-xs text-green-600 dark:text-green-400">
-                              {Math.round((1 - estimatedJpegSize / convertFile.size) * 100)}% smaller
+                        
+                        {/* Preview Image */}
+                        <div className="space-y-2">
+                          <div className="bg-muted p-2 rounded text-center">
+                            <p className="text-xs text-muted-foreground font-medium">Preview JPEG @ {convertQuality[0]}%</p>
+                            <p className="text-sm font-bold">
+                              {estimatedJpegSize ? formatFileSize(estimatedJpegSize) : 'Calculating...'}
                             </p>
+                            {estimatedJpegSize && convertFile.size > estimatedJpegSize && (
+                              <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                ↓ {Math.round((1 - estimatedJpegSize / convertFile.size) * 100)}% smaller
+                              </p>
+                            )}
+                          </div>
+                          {previewImageUrl && (
+                            <div className="border rounded-lg overflow-hidden bg-muted relative">
+                              {isGeneratingPreview && (
+                                <div className="absolute inset-0 bg-background/50 flex items-center justify-center z-10">
+                                  <Loader2 className="h-6 w-6 animate-spin" />
+                                </div>
+                              )}
+                              <img 
+                                src={previewImageUrl} 
+                                alt="Preview" 
+                                className="w-full h-auto max-h-64 object-contain"
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
