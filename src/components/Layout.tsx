@@ -106,10 +106,13 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold mb-3">About</h3>
-              <p className="text-sm text-muted-foreground">
-                All tools are free and run entirely in your browser. Your data never leaves your device.
-              </p>
+              <h3 className="font-semibold mb-3">Legal & Support</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link to="/about-us" className="hover:text-primary transition-smooth">About Us</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-primary transition-smooth">Privacy Policy</Link></li>
+                <li><Link to="/terms-of-service" className="hover:text-primary transition-smooth">Terms of Service</Link></li>
+                <li><a href="mailto:support@jsonpdfconverter.com" className="hover:text-primary transition-smooth">Contact Support</a></li>
+              </ul>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
