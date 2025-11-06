@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { SEO } from "@/components/SEO";
 import { TOOL_SEO } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
-import { jpegToPng, pngToJpeg, toWebP, resizeImage, getImageDimensions } from "@/lib/image-converter";
+import { jpegToPng, pngToJpeg, toWebP, resizeImage, getImageDimensions, loadImage } from "@/lib/image-converter";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { HowToUse } from "@/components/seo/HowToUse";
 import { FAQ } from "@/components/seo/FAQ";
@@ -32,6 +32,7 @@ export default function ImageTools() {
   const [convertQuality, setConvertQuality] = useState([90]);
   const [convertLoading, setConvertLoading] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [estimatedJpegSize, setEstimatedJpegSize] = useState<number | null>(null);
   
   // Resize states
   const [resizeFile, setResizeFile] = useState<File | null>(null);
@@ -125,6 +126,32 @@ export default function ImageTools() {
     : 0;
   
   // Converter handlers
+  const estimateJpegSize = async (file: File, quality: number) => {
+    try {
+      const img = await loadImage(file);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+      
+      ctx.drawImage(img, 0, 0);
+      
+      return new Promise<number>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob ? blob.size : 0);
+          },
+          'image/jpeg',
+          quality / 100
+        );
+      });
+    } catch (error) {
+      console.error('Failed to estimate JPEG size:', error);
+      return null;
+    }
+  };
+
   const handleConvertFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -136,11 +163,24 @@ export default function ImageTools() {
       try {
         const dims = await getImageDimensions(file);
         setImageDimensions(dims);
+        
+        const estimatedSize = await estimateJpegSize(file, convertQuality[0]);
+        setEstimatedJpegSize(estimatedSize);
       } catch (error) {
         console.error("Failed to get image dimensions:", error);
       }
     }
   };
+
+  useEffect(() => {
+    if (convertFile) {
+      const updateEstimation = async () => {
+        const estimatedSize = await estimateJpegSize(convertFile, convertQuality[0]);
+        setEstimatedJpegSize(estimatedSize);
+      };
+      updateEstimation();
+    }
+  }, [convertQuality, convertFile]);
   
   const handleJpegToPng = async () => {
     if (!convertFile) {
@@ -494,9 +534,28 @@ export default function ImageTools() {
                     className="mt-2"
                   />
                   {convertFile && imageDimensions && (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px ({formatFileSize(convertFile.size)})
-                    </p>
+                    <div className="mt-2 space-y-1">
+                      <p className="text-sm text-muted-foreground">
+                        {convertFile.name} - {imageDimensions.width} × {imageDimensions.height}px
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div className="bg-muted p-2 rounded">
+                          <p className="text-xs text-muted-foreground">Original PNG</p>
+                          <p className="font-medium">{formatFileSize(convertFile.size)}</p>
+                        </div>
+                        <div className="bg-muted p-2 rounded">
+                          <p className="text-xs text-muted-foreground">Estimated JPEG</p>
+                          <p className="font-medium">
+                            {estimatedJpegSize ? formatFileSize(estimatedJpegSize) : 'Calculating...'}
+                          </p>
+                          {estimatedJpegSize && convertFile.size > estimatedJpegSize && (
+                            <p className="text-xs text-green-600 dark:text-green-400">
+                              {Math.round((1 - estimatedJpegSize / convertFile.size) * 100)}% smaller
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
                 {convertFile && (
