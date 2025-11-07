@@ -20,9 +20,9 @@ const AboutUs = () => {
   return (
     <>
       <SEO
-        title="About Us - Built In India With Love | DevTools"
-        description="DevTools was founded in India with a vision to create the world's most reliable, secure, and intuitive set of online utilities. Free developer tools built with expertise and love."
-        keywords="about devtools, built in india, developer tools, indian tech company, online utilities india"
+        title="About Us - Built In India With Love | JSON PDF Converter"
+        description="JSON PDF Converter was founded in India with a vision to create the world's most reliable JSON to PDF converter and developer tools. Free, secure, built with expertise."
+        keywords="about json pdf converter, built in india, developer tools, indian tech company, json to pdf, online utilities india"
         path="/about-us"
         schema={schema}
       />
@@ -32,24 +32,47 @@ const AboutUs = () => {
         
         {/* Hero Section */}
         <div className="text-center mb-12 mt-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Heart className="h-8 w-8 text-primary animate-pulse" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Built In India With Love
-            </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Built In India With Love 🇮🇳</h1>
+          
+          {/* Developer Profile - E-E-A-T Enhancement */}
+          <div className="max-w-2xl mx-auto mt-8 p-6 bg-muted rounded-lg">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-24 h-24 rounded-full bg-gradient-hero flex items-center justify-center text-4xl font-bold text-primary">
+                AS
+              </div>
+              <div className="text-left">
+                <h2 className="text-2xl font-bold mb-2">Amit Sharma</h2>
+                <p className="text-muted-foreground mb-3">Senior Software Engineer & Founder</p>
+                <p className="text-sm text-muted-foreground">
+                  With 8+ years of experience in full-stack development and data engineering, Amit specializes in 
+                  building high-performance web tools and APIs. Previously worked at tech companies building 
+                  developer tools and data processing systems. Passionate about creating free, privacy-first 
+                  tools that developers and businesses can trust.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="text-xs px-2 py-1 bg-primary/10 rounded">JavaScript/TypeScript Expert</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 rounded">React Specialist</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 rounded">API Architecture</span>
+                  <span className="text-xs px-2 py-1 bg-primary/10 rounded">Data Engineering</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mt-4">
-            Our Mission for Developer Tools
-          </p>
         </div>
 
         {/* Mission Statement */}
         <Card className="p-8 mb-12">
-          <p className="text-lg leading-relaxed text-foreground">
-            DevTools (jsonpdfconverter.com) was founded with a simple vision: to create the world's most reliable, 
-            secure, and intuitive set of online utilities, built right here in India. We aim to eliminate the 
-            frustration of slow, ad-heavy, and untrustworthy tools by offering professional-grade solutions, 
-            free of charge to developers and users worldwide.
+          <h2 className="text-2xl font-bold mb-4">Our Mission: Free JSON to PDF Conversion for All</h2>
+          <p className="text-lg leading-relaxed text-foreground mb-4">
+            JSON PDF Converter (jsonpdfconverter.com) was founded with a simple vision: to create the world's best free 
+            JSON to PDF converter and professional-grade developer tools that are completely free, privacy-focused, and 
+            accessible to everyone. We aim to eliminate the frustration of slow, ad-heavy, and untrustworthy tools by 
+            offering professional-grade solutions built right here in India.
+          </p>
+          <p className="text-muted-foreground">
+            Our flagship JSON to PDF converter has helped thousands of developers, businesses, and students transform JSON data 
+            into professional PDF documents for reports, invoices, documentation, and archiving. Every conversion happens 
+            securely in your browser with zero data collection.
           </p>
         </Card>
 

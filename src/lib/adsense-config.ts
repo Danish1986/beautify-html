@@ -27,6 +27,7 @@ export const ADSENSE_CONFIG = {
     homeFeaturesToBlog: "4567890123", // Between features and blog section
 
     // Tool-specific Ads
+    jsonToPdfInArticle: "1234567891", // JSON to PDF - after conversion tool
     jsonFormatterInArticle: "5678901234", // JSON Formatter - after tool
     textToHtmlInArticle: "6789012345", // Text to HTML - after converter
     imageToolsInArticle: "7890123456", // Image Tools - after compression area

@@ -4,12 +4,20 @@
   <!-- Homepage -->
   <url>
     <loc>https://jsonpdfconverter.com/</loc>
-    <lastmod>2025-11-06</lastmod>
+    <lastmod>2025-11-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
-  <!-- Main Tool Pages -->
+  <!-- PRIMARY TOOL - JSON to PDF Converter -->
+  <url>
+    <loc>https://jsonpdfconverter.com/json-to-pdf</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Secondary Tool Pages -->
   <url>
     <loc>https://jsonpdfconverter.com/json-formatter</loc>
     <lastmod>2025-11-06</lastmod>

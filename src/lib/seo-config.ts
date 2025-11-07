@@ -1,18 +1,24 @@
 export const SEO_CONFIG = {
-  siteName: "DevTools",
+  siteName: "JSON PDF Converter",
   siteUrl: "https://jsonpdfconverter.com",
-  defaultTitle: "Free Online Developer Tools - JSON Formatter, Image Compressor & More | DevTools",
-  defaultDescription: "Professional developer tools for formatting JSON, converting text to HTML, compressing images, and more. Free, fast, and privacy-focused - no registration required.",
-  twitterHandle: "@devtools",
+  defaultTitle: "Free JSON to PDF Converter - Convert JSON to PDF Online Instantly | jsonpdfconverter.com",
+  defaultDescription: "Convert JSON to PDF free online. Transform JSON data into professional PDF documents instantly. Secure, fast, and works in your browser. No registration required.",
+  twitterHandle: "@jsonpdfconverter",
   defaultImage: "https://lovable.dev/opengraph-image-p98pqg.png",
 };
 
 export const TOOL_SEO = {
   home: {
-    title: "Free Online Developer Tools - JSON Formatter, Image Compressor & More | DevTools",
-    description: "Professional developer tools for formatting JSON, converting text to HTML, compressing images, and more. Free, fast, and privacy-focused - no registration required.",
-    keywords: "developer tools, json formatter, text to html converter, image compressor, base64 encoder, pdf tools, api tester, free online tools",
+    title: "Free JSON to PDF Converter - Convert JSON to PDF Online | Developer Tools",
+    description: "Convert JSON to PDF free online. Professional JSON to PDF converter with instant results. Also includes JSON formatter, image compressor, PDF tools and more. 100% free, secure, privacy-focused.",
+    keywords: "json to pdf converter, json pdf converter, convert json to pdf, json to pdf online, free json to pdf, developer tools, json formatter, image compressor, pdf tools",
     path: "/",
+  },
+  jsonToPdf: {
+    title: "JSON to PDF Converter - Convert JSON to PDF Free Online | jsonpdfconverter.com",
+    description: "Free JSON to PDF converter. Transform JSON data into professional PDF documents instantly. Secure browser-based conversion. No registration, no uploads. Perfect for reports, invoices, and documentation.",
+    keywords: "json to pdf, json to pdf converter, convert json to pdf, json pdf converter, json to pdf online, free json to pdf converter, json to pdf free, json file to pdf, api response to pdf, json data to pdf",
+    path: "/json-to-pdf",
   },
   jsonFormatter: {
     title: "JSON Formatter & Validator - Format, Minify & Validate JSON Online | DevTools",

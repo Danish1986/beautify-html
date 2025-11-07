@@ -20,11 +20,19 @@ import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const tools = [
   {
+    title: "JSON to PDF Converter",
+    description: "Convert JSON data to professional PDF documents instantly - our flagship tool",
+    icon: FileJson,
+    path: "/json-to-pdf",
+    color: "text-blue-500",
+    featured: true
+  },
+  {
     title: "JSON Formatter",
     description: "Format, validate, and beautify your JSON data with syntax highlighting",
     icon: FileJson,
     path: "/json-formatter",
-    color: "text-blue-500"
+    color: "text-green-500"
   },
   {
     title: "Text to HTML",
@@ -115,16 +123,15 @@ export default function Home() {
         <div className="container mx-auto px-4 py-20 md:py-32">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              Professional Developer Tools for{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">Everyone</span>
+              Free <span className="bg-gradient-primary bg-clip-text text-transparent">JSON to PDF Converter</span> & Developer Tools
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-              Format JSON, convert text to HTML, compress images, and more - all free and privacy-focused
+              Convert JSON to PDF instantly with our free online JSON to PDF converter. Also format JSON, compress images, and more - all free and privacy-focused.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-              <Link to="/json-formatter">
+              <Link to="/json-to-pdf">
                 <Button size="lg" className="w-full sm:w-auto shadow-elegant">
-                  Get Started Free
+                  Convert JSON to PDF Free
                 </Button>
               </Link>
               <Button size="lg" variant="outline" className="w-full sm:w-auto">

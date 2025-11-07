@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import Home from "./pages/Home";
+import JsonToPdf from "./pages/JsonToPdf";
 import JsonFormatter from "./pages/JsonFormatter";
 import TextToHtml from "./pages/TextToHtml";
 import ImageTools from "./pages/ImageTools";
@@ -27,6 +28,7 @@ const App = () => (
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/json-to-pdf" element={<JsonToPdf />} />
             <Route path="/json-formatter" element={<JsonFormatter />} />
             <Route path="/text-to-html" element={<TextToHtml />} />
             <Route path="/image-tools" element={<ImageTools />} />

@@ -6,7 +6,7 @@ import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
 
 const navigation = [
-  { name: "Home", path: "/" },
+  { name: "JSON to PDF", path: "/json-to-pdf" },
   { name: "JSON Formatter", path: "/json-formatter" },
   { name: "Text to HTML", path: "/text-to-html" },
   { name: "Image Tools", path: "/image-tools" },
@@ -25,7 +25,8 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         <nav className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl">
             <Code2 className="h-6 w-6 text-primary" />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">DevTools</span>
+            <span className="bg-gradient-primary bg-clip-text text-transparent hidden sm:inline">JSON PDF Converter</span>
+            <span className="bg-gradient-primary bg-clip-text text-transparent sm:hidden">JSON2PDF</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -91,17 +92,17 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
             <div>
               <div className="flex items-center gap-2 font-bold text-lg mb-3">
                 <Code2 className="h-5 w-5 text-primary" />
-                <span>DevTools</span>
+                <span>JSON PDF Converter</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Free online developer tools for formatting, converting, and optimizing your files.
+                Free JSON to PDF converter and developer tools. Convert JSON to PDF, format JSON, compress images, and more.
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-3">Quick Links</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link to="/json-to-pdf" className="hover:text-primary transition-smooth">JSON to PDF Converter</Link></li>
                 <li><Link to="/json-formatter" className="hover:text-primary transition-smooth">JSON Formatter</Link></li>
-                <li><Link to="/text-to-html" className="hover:text-primary transition-smooth">Text to HTML</Link></li>
                 <li><Link to="/image-tools" className="hover:text-primary transition-smooth">Image Tools</Link></li>
               </ul>
             </div>
@@ -116,7 +117,8 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} DevTools. All rights reserved.
+            <p>© {new Date().getFullYear()} JSON PDF Converter. All rights reserved. Built with expertise in India.</p>
+            <p className="mt-2 text-xs">Trusted by developers worldwide for fast, secure JSON to PDF conversion.</p>
           </div>
         </div>
       </footer>
