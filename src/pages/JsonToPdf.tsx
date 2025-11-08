@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { FileJson, Download, Upload, ThumbsUp, ThumbsDown } from "lucide-react";
 import { SEO } from "@/components/SEO";
@@ -13,36 +15,44 @@ import { HowToUse } from "@/components/seo/HowToUse";
 import { FAQ } from "@/components/seo/FAQ";
 import { RelatedTools } from "@/components/seo/RelatedTools";
 import { convertJsonToPdf } from "@/lib/json-to-pdf-converter";
-import { Code, FileType, Binary, Image as ImageIcon } from "lucide-react";
+import { Code, FileType, Binary } from "lucide-react";
 import { useFeedback } from "@/hooks/use-feedback";
 
 const sampleJSON = {
   "invoice": {
     "number": "INV-2024-001",
     "date": "2024-01-15",
+    "dueDate": "2024-02-15",
+    "status": "Paid",
     "customer": {
       "name": "Acme Corporation",
       "email": "contact@acme.com",
-      "address": "123 Business St, NY 10001"
+      "phone": "+1 (555) 123-4567",
+      "address": "123 Business St, Suite 100, New York, NY 10001"
     },
     "items": [
-      { "description": "Web Development", "quantity": 40, "rate": 150, "amount": 6000 },
-      { "description": "UI/UX Design", "quantity": 20, "rate": 120, "amount": 2400 }
+      { "description": "Web Development", "hours": 40, "rate": 150, "amount": 6000 },
+      { "description": "UI/UX Design", "hours": 20, "rate": 120, "amount": 2400 },
+      { "description": "Consulting Services", "hours": 10, "rate": 200, "amount": 2000 }
     ],
-    "total": 8400
+    "subtotal": 10400,
+    "taxRate": 0.08,
+    "tax": 832,
+    "total": 11232
   }
 };
 
 export default function JsonToPdf() {
   const [input, setInput] = useState(JSON.stringify(sampleJSON, null, 2));
   const [isConverting, setIsConverting] = useState(false);
+  const [tableFormat, setTableFormat] = useState(true);
   const { showFeedback, recordFeedback, stats } = useFeedback('json-to-pdf');
 
   const convertToPdf = async () => {
     try {
       setIsConverting(true);
       const parsed = JSON.parse(input);
-      await convertJsonToPdf(parsed, "converted-data.pdf");
+      await convertJsonToPdf(parsed, "converted-data.pdf", { tableFormat });
       toast.success("JSON converted to PDF successfully!");
       recordFeedback('conversion');
     } catch (error: any) {
@@ -109,7 +119,7 @@ export default function JsonToPdf() {
     },
     { 
       question: "How is the JSON data formatted in the PDF?", 
-      answer: "The JSON to PDF converter creates clean, readable PDFs with proper indentation, syntax highlighting, and hierarchical structure. Objects and arrays are formatted with clear nesting, making it easy to understand complex data structures when printed or shared." 
+      answer: "The JSON to PDF converter uses smart table formatting by default, transforming arrays into readable data tables and objects into key-value tables. This makes JSON data easy to understand for anyone, even without technical knowledge. You can also switch to raw text format if you prefer to see the JSON structure." 
     },
     { 
       question: "Can I use this JSON to PDF converter for invoices?", 
@@ -193,6 +203,22 @@ export default function JsonToPdf() {
                 placeholder="Paste your JSON here..."
                 className="font-mono min-h-[400px]"
               />
+            </div>
+
+            <div className="flex items-center space-x-2 p-4 bg-muted/50 rounded-lg">
+              <Switch
+                id="table-format"
+                checked={tableFormat}
+                onCheckedChange={setTableFormat}
+              />
+              <div className="flex-1">
+                <Label htmlFor="table-format" className="font-medium cursor-pointer">
+                  Smart Table Format
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Convert JSON to readable tables instead of raw text (recommended for non-technical users)
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
