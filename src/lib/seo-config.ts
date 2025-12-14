@@ -33,15 +33,15 @@ export const TOOL_SEO = {
     path: "/text-to-html",
   },
   imageTools: {
-    title: "Free Image Tools: Compress, Convert JPEG to PNG, PNG to JPEG, WebP & Resize | Online",
-    description: "Free online image tools: compress images, convert JPEG to PNG, PNG to JPEG, convert to WebP format, and resize images. Optimize images for web with quality control. 100% free and secure.",
-    keywords: "image compressor, compress images online, jpeg to png, png to jpeg, convert to webp, image converter, resize image, image optimizer, reduce image size, jpg to png converter, png to jpg converter, webp converter, image format converter, optimize images for web",
+    title: "Free Image Compressor with Quality Preview | JPEG to PNG, WebP Converter | Online",
+    description: "Compress images with real-time quality preview - see exactly how your image will look before downloading. Compare original vs compressed side-by-side. Convert JPEG to PNG, PNG to JPEG, WebP. Find optimal compression automatically. 100% free, browser-based, private.",
+    keywords: "image compressor with preview, see compression quality before download, compare image quality, best image compression, optimal image compression, image quality comparison tool, jpeg to png, png to jpeg, convert to webp, image converter, resize image, image optimizer, reduce image size, lossless vs lossy compression, webp converter, optimize images for web",
     path: "/image-tools",
   },
   pdfTools: {
-    title: "PDF Tools: Convert PDF to Word, Remove Password, Compress & Merge | Free Online",
-    description: "Free online PDF tools: convert PDF to Word/Excel, remove PDF password protection, compress, merge & split files. Process securely in your browser. No registration required.",
-    keywords: "pdf to word, pdf password remover, compress pdf, merge pdf, split pdf, pdf to word converter online, free pdf password remover online, reduce pdf size, pdf to excel, unlock pdf, pdf converter, remove password from pdf, pdf to docx converter",
+    title: "Free PDF to Excel Converter - Bank Statements, Tables & Data Extraction | Online",
+    description: "Convert PDF to Excel instantly - perfect for bank statements, financial reports, and data tables. PDF to Word, compress, merge & split. 100% browser-based processing - your files never leave your device. No uploads, complete privacy.",
+    keywords: "pdf to excel converter, bank statement to excel, convert bank statement pdf to excel, pdf to spreadsheet, extract data from pdf, pdf table extraction, financial pdf to excel, bank statement converter, pdf to xlsx, pdf data extraction, pdf to word, compress pdf, merge pdf, split pdf, remove pdf password, secure pdf converter, private pdf conversion, pdf to word converter online, Chase pdf to excel, Wells Fargo statement converter",
     path: "/pdf-tools",
   },
   base64Tools: {
