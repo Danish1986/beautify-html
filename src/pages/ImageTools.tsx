@@ -27,6 +27,13 @@ export default function ImageTools() {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Compress real-time preview states
+  const [compressPreviewUrl, setCompressPreviewUrl] = useState<string | null>(null);
+  const [compressEstimatedSize, setCompressEstimatedSize] = useState<number | null>(null);
+  const [isGeneratingCompressPreview, setIsGeneratingCompressPreview] = useState(false);
+  const [optimalQuality, setOptimalQuality] = useState<number | null>(null);
+  const compressDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  
   // Converter states
   const [convertFile, setConvertFile] = useState<File | null>(null);
   const [convertQuality, setConvertQuality] = useState([90]);
@@ -45,7 +52,7 @@ export default function ImageTools() {
   const [resizeLoading, setResizeLoading] = useState(false);
   const [resizeDimensions, setResizeDimensions] = useState<{ width: number; height: number } | null>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
@@ -53,16 +60,122 @@ export default function ImageTools() {
         return;
       }
 
+      // Clean up previous preview URL
+      if (compressPreviewUrl) URL.revokeObjectURL(compressPreviewUrl);
+
       setOriginalSize(file.size);
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setSelectedImage(event.target?.result as string);
+      reader.onload = async (event) => {
+        const dataUrl = event.target?.result as string;
+        setSelectedImage(dataUrl);
         setCompressedImage(null);
+        
+        // Generate initial preview and find optimal quality
+        await generateCompressPreview(dataUrl, quality[0]);
+        await findOptimalQuality(dataUrl);
+        
         toast.success("Image uploaded successfully!");
       };
       reader.readAsDataURL(file);
     }
   };
+
+  // Generate compress preview at specific quality
+  const generateCompressPreview = async (imageData: string, qualityValue: number) => {
+    setIsGeneratingCompressPreview(true);
+    try {
+      const img = new Image();
+      img.src = imageData;
+      await new Promise((resolve) => { img.onload = resolve; });
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      ctx.drawImage(img, 0, 0);
+      
+      return new Promise<void>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              if (compressPreviewUrl) URL.revokeObjectURL(compressPreviewUrl);
+              const url = URL.createObjectURL(blob);
+              setCompressPreviewUrl(url);
+              setCompressEstimatedSize(blob.size);
+            }
+            setIsGeneratingCompressPreview(false);
+            resolve();
+          },
+          'image/jpeg',
+          qualityValue / 100
+        );
+      });
+    } catch (error) {
+      console.error('Failed to generate compress preview:', error);
+      setIsGeneratingCompressPreview(false);
+    }
+  };
+
+  // Find optimal quality (best quality/size ratio)
+  const findOptimalQuality = async (imageData: string) => {
+    try {
+      const img = new Image();
+      img.src = imageData;
+      await new Promise((resolve) => { img.onload = resolve; });
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      ctx.drawImage(img, 0, 0);
+      
+      // Test different quality levels to find optimal
+      const results: { quality: number; size: number; ratio: number }[] = [];
+      
+      for (const q of [90, 85, 80, 75, 70]) {
+        const blob = await new Promise<Blob | null>((resolve) => {
+          canvas.toBlob((b) => resolve(b), 'image/jpeg', q / 100);
+        });
+        if (blob) {
+          const sizeReduction = 1 - (blob.size / (img.width * img.height * 3));
+          results.push({ quality: q, size: blob.size, ratio: q / (blob.size / 1000) });
+        }
+      }
+      
+      // Find the quality with best visual quality to size ratio
+      const optimal = results.reduce((best, current) => 
+        current.ratio > best.ratio ? current : best
+      , results[0]);
+      
+      setOptimalQuality(optimal?.quality || 78);
+    } catch (error) {
+      console.error('Failed to find optimal quality:', error);
+      setOptimalQuality(78);
+    }
+  };
+
+  // Debounced preview generation for quality slider
+  useEffect(() => {
+    if (selectedImage) {
+      if (compressDebounceRef.current) {
+        clearTimeout(compressDebounceRef.current);
+      }
+      
+      compressDebounceRef.current = setTimeout(() => {
+        generateCompressPreview(selectedImage, quality[0]);
+      }, 200);
+    }
+    
+    return () => {
+      if (compressDebounceRef.current) {
+        clearTimeout(compressDebounceRef.current);
+      }
+    };
+  }, [quality, selectedImage]);
 
   const compressImage = async () => {
     if (!selectedImage) {
@@ -412,10 +525,19 @@ export default function ImageTools() {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-hero mb-4">
           <ImageIcon className="h-8 w-8 text-purple-500" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Free Image Tools: Compress & Convert Images Online</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Compress images, convert JPEG to PNG, PNG to JPEG, and to WebP format. Resize images with quality control.
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Free Image Compressor with Quality Preview</h1>
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
+          <strong className="text-foreground">See exactly how your compressed image will look before downloading.</strong> Compare original vs compressed side-by-side. Find optimal compression automatically. Convert JPEG to PNG, PNG to JPEG, and WebP.
         </p>
+        <p className="text-base text-primary font-medium mb-6">
+          ★ Real-time preview • Automatic optimal quality detection • 100% browser-based
+        </p>
+        <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-2">👁️ Preview Before Download</span>
+          <span className="flex items-center gap-2">⚡ Find Optimal Quality</span>
+          <span className="flex items-center gap-2">🔒 Files Stay Private</span>
+          <span className="flex items-center gap-2">✓ 100% Free</span>
+        </div>
       </div>
 
       {/* Tool Section */}
@@ -445,10 +567,13 @@ export default function ImageTools() {
           </TabsList>
           
           <TabsContent value="compress">
-        <Card>
+        <Card className="border-primary/20 bg-primary/5">
           <CardHeader>
-            <CardTitle>Compress Your Image</CardTitle>
-            <CardDescription>Upload an image and adjust the quality slider to compress it</CardDescription>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">★ Real-Time Preview</span>
+            </div>
+            <CardTitle>Compress Your Image with Live Preview</CardTitle>
+            <CardDescription>See exactly how your compressed image will look before downloading. Find the perfect balance between quality and file size.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
@@ -475,8 +600,70 @@ export default function ImageTools() {
 
             {selectedImage && (
               <>
-                <div>
-                  <Label>Quality: {quality[0]}%</Label>
+                {/* Real-time preview comparison */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Original Image */}
+                  <div className="space-y-2">
+                    <div className="bg-muted p-2 rounded text-center">
+                      <p className="text-xs text-muted-foreground font-medium">Original Image</p>
+                      <p className="text-sm font-bold">{formatFileSize(originalSize)}</p>
+                    </div>
+                    <div className="border rounded-lg overflow-hidden bg-muted">
+                      <img 
+                        src={selectedImage} 
+                        alt="Original" 
+                        className="w-full h-auto max-h-64 object-contain"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Live Preview */}
+                  <div className="space-y-2">
+                    <div className="bg-muted p-2 rounded text-center">
+                      <p className="text-xs text-muted-foreground font-medium">Preview @ {quality[0]}%</p>
+                      <p className="text-sm font-bold">
+                        {compressEstimatedSize ? formatFileSize(compressEstimatedSize) : 'Calculating...'}
+                      </p>
+                      {compressEstimatedSize && originalSize > compressEstimatedSize && (
+                        <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          ↓ {Math.round((1 - compressEstimatedSize / originalSize) * 100)}% smaller
+                        </p>
+                      )}
+                    </div>
+                    <div className="border rounded-lg overflow-hidden bg-muted relative">
+                      {isGeneratingCompressPreview && (
+                        <div className="absolute inset-0 bg-background/50 flex items-center justify-center z-10">
+                          <Loader2 className="h-6 w-6 animate-spin" />
+                        </div>
+                      )}
+                      {compressPreviewUrl ? (
+                        <img 
+                          src={compressPreviewUrl} 
+                          alt="Preview" 
+                          className="w-full h-auto max-h-64 object-contain"
+                        />
+                      ) : (
+                        <div className="h-64 flex items-center justify-center">
+                          <Loader2 className="h-6 w-6 animate-spin" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quality slider with optimal indicator */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Quality: {quality[0]}%</Label>
+                    {optimalQuality && (
+                      <button 
+                        onClick={() => setQuality([optimalQuality])}
+                        className="text-xs text-primary hover:underline font-medium"
+                      >
+                        💡 Use Optimal: {optimalQuality}%
+                      </button>
+                    )}
+                  </div>
                   <Slider
                     value={quality}
                     onValueChange={setQuality}
@@ -485,9 +672,15 @@ export default function ImageTools() {
                     step={1}
                     className="mt-2"
                   />
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Lower quality = smaller file size. Recommended: 70-90%
-                  </p>
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Smaller file</span>
+                    <span>Higher quality</span>
+                  </div>
+                  {optimalQuality && Math.abs(quality[0] - optimalQuality) <= 5 && (
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium text-center">
+                      ✓ You're at the optimal quality level for this image
+                    </p>
+                  )}
                 </div>
 
                 <Button 
@@ -502,56 +695,39 @@ export default function ImageTools() {
                     </>
                   ) : (
                     <>
-                      <ImageIcon className="h-4 w-4" />
-                      Compress Image
+                      <Download className="h-4 w-4" />
+                      Compress & Download
                     </>
                   )}
                 </Button>
-              </>
-            )}
-
-            {(selectedImage || compressedImage) && (
-              <div className="grid md:grid-cols-2 gap-4">
-                {selectedImage && (
-                  <div>
-                    <Label className="mb-2 block">Original Image</Label>
-                    <div className="border rounded-lg p-4 bg-muted">
-                      <img
-                        src={selectedImage}
-                        alt="Original"
-                        className="w-full h-auto rounded"
-                      />
-                      <p className="text-sm text-muted-foreground mt-2 text-center">
-                        Size: {formatFileSize(originalSize)}
-                      </p>
-                    </div>
-                  </div>
-                )}
 
                 {compressedImage && (
-                  <div>
-                    <Label className="mb-2 block">Compressed Image</Label>
-                    <div className="border rounded-lg p-4 bg-muted">
-                      <img
-                        src={compressedImage}
-                        alt="Compressed"
-                        className="w-full h-auto rounded"
-                      />
-                      <div className="mt-2 text-sm text-center">
-                        <p className="text-muted-foreground">Size: {formatFileSize(compressedSize)}</p>
-                        <p className="text-success font-medium">Saved {savingsPercent}%</p>
-                      </div>
+                  <div className="border rounded-lg p-4 bg-muted">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-medium">Compressed Result</p>
+                      <p className="text-sm text-green-600 dark:text-green-400 font-bold">Saved {savingsPercent}%</p>
                     </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Final size: {formatFileSize(compressedSize)}
+                    </p>
                     <Button
                       onClick={downloadImage}
                       variant="outline"
-                      className="w-full mt-2 gap-2"
+                      className="w-full gap-2"
                     >
                       <Download className="h-4 w-4" />
-                      Download Compressed Image
+                      Download Again
                     </Button>
                   </div>
                 )}
+              </>
+            )}
+
+            {!selectedImage && (
+              <div className="bg-muted rounded-lg p-6 text-center">
+                <ImageIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mb-2">Upload an image to see real-time compression preview</p>
+                <p className="text-xs text-muted-foreground">We'll automatically find the optimal compression level for your image</p>
               </div>
             )}
           </CardContent>
