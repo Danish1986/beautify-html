@@ -27,6 +27,8 @@ import { SEO } from "@/components/SEO";
 import { TOOL_SEO, SEO_CONFIG } from "@/lib/seo-config";
 import { AdSense } from "@/components/AdSense";
 import { ADSENSE_CONFIG } from "@/lib/adsense-config";
+import { HeroSection } from "@/components/HeroSection";
+import { allSEOPages, navigationGroups } from "@/data";
 
 const tools = [
   {
