@@ -7,6 +7,7 @@ import {
   BarChart, Globe, Shield, Zap, Database, Server,
   Smartphone, Monitor, Share2, Download, Upload,
   RefreshCw, Settings, MessageSquare, Mail, Calendar,
+  Palette,
   LucideIcon
 } from "lucide-react";
 
