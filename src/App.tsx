@@ -17,6 +17,12 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 
+// SEO Landing Pages
+import PdfToExcel from "./pages/landing/PdfToExcel";
+import JsonToExcel from "./pages/landing/JsonToExcel";
+import JsonToCsv from "./pages/landing/JsonToCsv";
+import JsonToXml from "./pages/landing/JsonToXml";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -38,6 +44,13 @@ const App = () => (
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            
+            {/* SEO Landing Pages */}
+            <Route path="/pdf-to-excel-converter" element={<PdfToExcel />} />
+            <Route path="/json-to-excel-converter" element={<JsonToExcel />} />
+            <Route path="/json-to-csv-converter" element={<JsonToCsv />} />
+            <Route path="/json-to-xml-converter" element={<JsonToXml />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
