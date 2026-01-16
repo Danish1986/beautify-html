@@ -642,11 +642,11 @@ export default function Home() {
                 Convert JSON to PDF Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="#tools">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <a href="#tools">
+              <Button size="lg" variant="secondary" className="w-full sm:w-auto bg-white/20 text-white hover:bg-white/30 border-white/40">
                 Explore All Tools
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </section>
