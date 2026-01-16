@@ -4,7 +4,8 @@ import {
   FileText, Code, Hash, Type, Braces, Terminal, FileCode,
   BookOpen, GraduationCap, Lightbulb, Target, TrendingUp,
   Users, Briefcase, Building2, ShoppingCart, Stethoscope,
-  Scale, Newspaper, Camera, Palette, LayoutGrid,
+  Scale, Newspaper, Camera, Palette, LayoutGrid, Shield,
+  TestTube,
   LucideIcon
 } from "lucide-react";
 
