@@ -29,6 +29,14 @@ import { allSEOPages } from "./data";
 
 const queryClient = new QueryClient();
 
+// List of reserved routes that should NOT be handled by SEOPage
+const reservedRoutes = [
+  'json-to-pdf', 'json-formatter', 'text-to-html', 'image-tools',
+  'pdf-tools', 'base64-tools', 'api-tester', 'about-us',
+  'privacy-policy', 'terms-of-service', 'pdf-to-excel-converter',
+  'json-to-excel-converter', 'json-to-csv-converter', 'json-to-xml-converter'
+];
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -37,7 +45,7 @@ const App = () => (
       <BrowserRouter>
         <Layout>
           <Routes>
-            {/* Main Tool Pages */}
+            {/* Main Tool Pages - MUST be first */}
             <Route path="/" element={<Home />} />
             <Route path="/json-to-pdf" element={<JsonToPdf />} />
             <Route path="/json-formatter" element={<JsonFormatter />} />
@@ -47,7 +55,7 @@ const App = () => (
             <Route path="/base64-tools" element={<Base64Tools />} />
             <Route path="/api-tester" element={<ApiTester />} />
             
-            {/* About & Legal Pages */}
+            {/* About & Legal Pages - MUST come before dynamic routes */}
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
@@ -58,17 +66,16 @@ const App = () => (
             <Route path="/json-to-csv-converter" element={<JsonToCsv />} />
             <Route path="/json-to-xml-converter" element={<JsonToXml />} />
             
-            {/* Dynamic SEO Pages - 100+ pages */}
-            {allSEOPages.map((page) => (
-              <Route 
-                key={page.slug} 
-                path={`/${page.slug}`} 
-                element={<SEOPage />} 
-              />
-            ))}
-            
-            {/* Catch-all for dynamic SEO pages with slug param */}
-            <Route path="/:slug" element={<SEOPage />} />
+            {/* Dynamic SEO Pages - 100+ pages (filter out reserved routes) */}
+            {allSEOPages
+              .filter(page => !reservedRoutes.includes(page.slug))
+              .map((page) => (
+                <Route 
+                  key={page.slug} 
+                  path={`/${page.slug}`} 
+                  element={<SEOPage />} 
+                />
+              ))}
             
             {/* 404 Page - Must be last */}
             <Route path="*" element={<NotFound />} />
