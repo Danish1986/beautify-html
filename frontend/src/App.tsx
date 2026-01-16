@@ -16,12 +16,16 @@ import AboutUs from "./pages/AboutUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
+import SEOPage from "./pages/SEOPage";
 
-// SEO Landing Pages
+// Legacy SEO Landing Pages (keep for backward compatibility)
 import PdfToExcel from "./pages/landing/PdfToExcel";
 import JsonToExcel from "./pages/landing/JsonToExcel";
 import JsonToCsv from "./pages/landing/JsonToCsv";
 import JsonToXml from "./pages/landing/JsonToXml";
+
+// Import all SEO pages data for dynamic routing
+import { allSEOPages } from "./data";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +37,7 @@ const App = () => (
       <BrowserRouter>
         <Layout>
           <Routes>
+            {/* Main Tool Pages */}
             <Route path="/" element={<Home />} />
             <Route path="/json-to-pdf" element={<JsonToPdf />} />
             <Route path="/json-formatter" element={<JsonFormatter />} />
@@ -41,17 +46,31 @@ const App = () => (
             <Route path="/pdf-tools" element={<PdfTools />} />
             <Route path="/base64-tools" element={<Base64Tools />} />
             <Route path="/api-tester" element={<ApiTester />} />
+            
+            {/* About & Legal Pages */}
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             
-            {/* SEO Landing Pages */}
+            {/* Legacy SEO Landing Pages (keep for backward compatibility) */}
             <Route path="/pdf-to-excel-converter" element={<PdfToExcel />} />
             <Route path="/json-to-excel-converter" element={<JsonToExcel />} />
             <Route path="/json-to-csv-converter" element={<JsonToCsv />} />
             <Route path="/json-to-xml-converter" element={<JsonToXml />} />
             
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* Dynamic SEO Pages - 100+ pages */}
+            {allSEOPages.map((page) => (
+              <Route 
+                key={page.slug} 
+                path={`/${page.slug}`} 
+                element={<SEOPage />} 
+              />
+            ))}
+            
+            {/* Catch-all for dynamic SEO pages with slug param */}
+            <Route path="/:slug" element={<SEOPage />} />
+            
+            {/* 404 Page - Must be last */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
