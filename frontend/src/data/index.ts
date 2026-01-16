@@ -6,6 +6,7 @@ import { imageToolsPages } from './image-tools-pages';
 import { base64ToolsPages, apiToolsPages, blogPages, industryPages } from './base64-api-blog-pages';
 import { textCodeToolsPages, additionalBlogPages, additionalUseCasePages } from './additional-pages';
 import { moreToolPages, moreBlogPages } from './final-pages';
+import { extraPages } from './extra-pages';
 
 // Export individual categories
 export { jsonToolsPages } from './seo-pages-data';
@@ -14,6 +15,7 @@ export { imageToolsPages } from './image-tools-pages';
 export { base64ToolsPages, apiToolsPages, blogPages, industryPages } from './base64-api-blog-pages';
 export { textCodeToolsPages, additionalBlogPages, additionalUseCasePages } from './additional-pages';
 export { moreToolPages, moreBlogPages } from './final-pages';
+export { extraPages } from './extra-pages';
 
 // Combine all pages into one array for easy access
 export const allSEOPages = [
@@ -28,7 +30,8 @@ export const allSEOPages = [
   ...additionalBlogPages,
   ...additionalUseCasePages,
   ...moreToolPages,
-  ...moreBlogPages
+  ...moreBlogPages,
+  ...extraPages
 ];
 
 // Get page by slug
@@ -84,7 +87,7 @@ export const navigationGroups = [
   },
   {
     title: "Text & Code Tools",
-    items: [...textCodeToolsPages, ...moreToolPages].map(p => ({ title: p.title.split(' - ')[0], path: `/${p.slug}` }))
+    items: [...textCodeToolsPages, ...moreToolPages, ...extraPages].map(p => ({ title: p.title.split(' - ')[0], path: `/${p.slug}` }))
   },
   {
     title: "Guides & Tutorials",
