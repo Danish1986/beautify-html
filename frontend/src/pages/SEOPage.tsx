@@ -1,9 +1,11 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { getPageBySlug } from "@/data";
 import { ToolLandingTemplate } from "@/components/landing/ToolLandingTemplate";
 
 export default function SEOPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
+  // Extract slug from pathname (remove leading slash)
+  const slug = location.pathname.slice(1);
   
   if (!slug) {
     return <Navigate to="/" replace />;
@@ -12,7 +14,7 @@ export default function SEOPage() {
   const pageData = getPageBySlug(slug);
   
   if (!pageData) {
-    return <Navigate to="/404" replace />;
+    return <Navigate to="/" replace />;
   }
   
   return (
