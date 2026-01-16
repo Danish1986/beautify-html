@@ -162,11 +162,11 @@ export function HeroSection() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="#tools">
+            <a href="#tools">
               <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-6 hover:bg-primary/5">
                 Explore All Tools
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
