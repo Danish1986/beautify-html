@@ -8,6 +8,7 @@ import {
   ArrowLeftRight, Search, Terminal, Server, Webhook, TestTube,
   BookOpen, GraduationCap, Briefcase, Building2, ShoppingCart,
   Stethoscope, Scale, Camera, Newspaper, Users, TrendingUp,
+  CheckCircle,
   LucideIcon
 } from "lucide-react";
 
