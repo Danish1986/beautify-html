@@ -322,54 +322,8 @@ export default function Home() {
         schema={schema}
       />
       
-      {/* Hero Section - Enhanced */}
-      <section className="relative overflow-hidden bg-gradient-hero">
-        <div className="container mx-auto px-4 py-20 md:py-32">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              Free <span className="bg-gradient-primary bg-clip-text text-transparent">JSON to PDF Converter</span> & Developer Tools
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
-              Convert JSON to PDF instantly with our free online JSON to PDF converter. Format JSON, compress images, encode Base64, test APIs, and more - all tools are 100% free and privacy-focused. Your files never leave your device.
-            </p>
-            <p className="text-base text-muted-foreground mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150 max-w-3xl mx-auto">
-              Perfect for developers, data analysts, students, and professionals who need fast, secure file conversions without uploading sensitive data to unknown servers. All processing happens locally in your browser using advanced JavaScript libraries - no server uploads, no registration, no hidden fees.
-            </p>
-            
-            {/* Value Proposition Badges */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                <CheckCircle className="h-4 w-4" /> 8+ Professional Tools
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                <Shield className="h-4 w-4" /> Zero Server Uploads
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                <DollarSign className="h-4 w-4" /> 100% Free Forever
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                <Zap className="h-4 w-4" /> No File Size Limits
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                <Globe className="h-4 w-4" /> Works Offline
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-              <Link to="/json-to-pdf">
-                <Button size="lg" className="w-full sm:w-auto shadow-elegant">
-                  Convert JSON to PDF Free <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="#tools">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Explore All Tools
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Hero Section with Animations */}
+      <HeroSection />
 
       {/* AdSense - Between Hero and Tools */}
       <div className="container mx-auto px-4">
